@@ -1,0 +1,72 @@
+﻿@inject Microsoft.Extensions.Options.IOptionsSnapshot<AppConfig> AppConfigOptions
+@using System.Reflection
+@using Documentor.Config
+
+@{
+    AppConfig appConfig = AppConfigOptions.Value;
+    var appVersion = typeof(Documentor.Startup).Assembly.GetName().Version.ToString();
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    @if (!String.IsNullOrEmpty(Description))
+    {
+        <meta name="description" content="@Description">}
+    <meta name="generator" content="Documentor @appVersion">
+    <title>@Title</title>
+    <link rel="shortcut icon" href="~/images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet" />
+    <link href="~/css/site.min.css" rel="stylesheet" />
+</head>
+<body>
+    <aside class="sidebar">
+        <header class="header">
+            <div class="header__inner">
+                <div class="logo">
+                    @{
+                        string brand = !String.IsNullOrWhiteSpace(appConfig.DisplayName) ? appConfig.DisplayName : "Documentor";
+                    }
+                    <a href="/" class="logo__link" title="@brand">
+                        <span class="logo__text">
+                            @brand
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </header>
+        @await Component.InvokeAsync("Nav")
+        @if (!String.IsNullOrWhiteSpace(appConfig.Download.Url))
+        {
+            <div class="share scroller__section">
+                <a href="@appConfig.Download.Url" class="btn btn-primary btn-block download__button">
+                    <span class="download__button-icon"><i class="la la-download"></i></span>
+                    <span class="download__button-text">Download@(!String.IsNullOrWhiteSpace(appConfig.Download.Version) ? " v" + appConfig.Download.Version : "")</span>
+                </a>
+            </div>
+        }
+        @Html.ExternalLinks(appConfig.ExternalLinks)
+    </aside>
+    <div class="content">
+
+        <div class="content-overlay"></div>
+
+        <button class="btn btn-primary sidebar-toggle">
+            <i class="la la-navicon"></i>
+        </button>
+
+        <main class="main">
+            @RenderBody()
+        </main>
+
+        <footer class="footer">
+            Powered by <a href="https://github.com/askalione/documentor">Documentor</a> &copy; <a href="https://github.com/askalione">Alexey Drapash</a>, <a href="http://creacode.ru">Creacode</a>
+        </footer>
+
+    </div>
+    <script src="~/js/site.min.js"></script>
+</body>
+</html>

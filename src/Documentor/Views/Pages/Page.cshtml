@@ -1,0 +1,12 @@
+﻿@model Page
+
+@{
+    Title = Model.Metadata.Title;
+    Description = Model.Metadata.Description;
+}
+
+@await Component.InvokeAsync("Breadcrumbs")
+
+<div class="page-content">
+    @Html.Raw(Model.Content.Html)
+</div>

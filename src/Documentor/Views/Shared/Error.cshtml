@@ -1,0 +1,10 @@
+﻿@model Error
+
+@{ 
+    Title = "Whoops...";
+}
+
+<div class="error">
+    <div class="error__code">@Model.Code</div>
+    <div class="error__message">@Model.Message</div>
+</div>

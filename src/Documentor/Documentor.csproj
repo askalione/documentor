@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Version>1.0.0</Version>
+    <Authors>Alexey Drapash</Authors>
+    <Company>Creacode</Company>
+    <Product>Documentor</Product>
+    <PackageId>Documentor</PackageId>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Description>Extremly light and simple flat file CMS on .NET for build software documentation</Description>
+    <Copyright>Copyright © 2018 Alexey Drapash</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Cache\**" />
+    <Compile Remove="Pages\**" />
+    <Content Remove="Cache\**" />
+    <Content Remove="Pages\**" />
+    <EmbeddedResource Remove="Cache\**" />
+    <EmbeddedResource Remove="Pages\**" />
+    <None Remove="Cache\**" />
+    <None Remove="Pages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
+    <PackageReference Include="Markdig" Version="0.15.1" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="NLog" Version="4.5.8" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="nlog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\css\*" CopyToPublishDirectory="Never" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+    <Content Include="wwwroot\css\site.min.css" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+    <Content Remove="wwwroot\js\*" CopyToPublishDirectory="Never" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+    <Content Include="wwwroot\js\site.min.js" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+  </ItemGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\dist\$(Version)\</OutputPath>
+  </PropertyGroup>
+
+</Project>
