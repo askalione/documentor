@@ -41,6 +41,7 @@ Documentor is extremly light and easy to use flat file CMS on .NET Core 2.1 for 
 }
 ```
 Описание полей в файле`metadata.json`:
+
 | Name | Description | 
 | --- | --- | 
 | title | Title of page which display in nav and title meta tag | 
@@ -50,6 +51,7 @@ Documentor is extremly light and easy to use flat file CMS on .NET Core 2.1 for 
 
 Для конфигурации используется файл `appsettings.json`.
 Описание основных полей из секции **App** в файле `appsettings.json`:
+
 | Name | Description | 
 | --- | --- | 
 | DisplayName| Название вашего software, которое будет отображаться в шапке сайта. (default: 'Documentor') | 
@@ -59,6 +61,7 @@ Documentor is extremly light and easy to use flat file CMS on .NET Core 2.1 for 
 | ExternalLinks| Ссылки на внешние package managers |
 
 Описание основных полей из секции **IO** в файле `appsettings.json`:
+
 | Name | Description | 
 | --- | --- | 
 | Pages.Path| Путь относительно корня сайта, где расположена структура документации (default: 'Pages') | 
