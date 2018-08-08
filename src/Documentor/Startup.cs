@@ -33,17 +33,11 @@ namespace Documentor
             services.AddOptions();
             services.Configure<AppConfig>(_configuration.GetSection("App"));
             services.Configure<IOConfig>(_configuration.GetSection("IO"));
-            services.PostConfigure<IOConfig>(config =>
-            {
-                if (!String.IsNullOrWhiteSpace(config.Pages.Path))
-                    config.Pages.Path = Path.Combine(_env.ContentRootPath, config.Pages.Path);
-
-                if (!String.IsNullOrWhiteSpace(config.Cache.Path))
-                    config.Cache.Path = Path.Combine(_env.ContentRootPath, config.Cache.Path);
-            });
             services.AddSingleton<IMarkdownConverter, MarkdigConverter>();
-            services.AddScoped<IPager, Pager>();
+            services.AddScoped<ICacheManager, CacheManager>();
+            services.AddScoped<IPageManager, PageManager>();
             services.AddScoped<INavigator, PerRequestNavigator>();
+            services.AddScoped<IPager, Pager>(); 
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -75,7 +69,6 @@ namespace Documentor
 
             app.UseMvc(routes =>
             {
-
                 routes.MapRoute("error",
                     "Error",
                     new { controller = "Errors", action = "Error" }

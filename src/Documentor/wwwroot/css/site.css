@@ -1,5 +1,10 @@
 /* Base */
 
+html,
+body {
+  height: 100%;
+}
+
 body {
     font-family: "Montserrat", "Helvetica", "Tahoma", Geneva, "Arial", sans-serif;
     font-weight: 400;
@@ -264,13 +269,18 @@ a:focus, a:hover {
 /* Content */
 
 .content {
+    min-height: 100%;
     position: relative;
-    margin-left: 300px;
     overflow-x: hidden;
-    padding: 30px 40px 0 40px;
+    overflow-y: hidden;
+    padding: 30px 40px 80px 40px;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     transition: all 0.5s ease;
+}
+
+.sidebar + .content {    
+    margin-left: 300px;
 }
 
 .sidebar--expanded + .content {
@@ -279,7 +289,10 @@ a:focus, a:hover {
 
 @media only all and (max-width: 47.938em) {
     .content {
-        padding: 10px 20px 0 20px;
+        padding: 10px 20px 80px 20px;
+    }
+
+    .sidebar + .content {    
         margin-left: 0;
     }
 
@@ -356,9 +369,14 @@ a:focus, a:hover {
 /* Footer */
 
 .footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
     padding: 20px;
     width: 100%;
     text-align: center;
+    height: 80px;
 }
 
 /* Error */
