@@ -49,9 +49,6 @@ namespace Documentor.Models
             return GetDirectoryPath();
         }
 
-        public static Location Empty()
-        {
-            return new Location(new List<Folder>());
-        }
+        public static Location Empty => new Location(new List<Folder>());
     }
 }

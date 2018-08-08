@@ -1,9 +1,7 @@
-﻿using Documentor.Config;
-using Documentor.Constants;
+﻿using Documentor.Constants;
 using Documentor.Models;
 using Documentor.Utilities;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -125,15 +123,17 @@ namespace Documentor.Services.Impl
         private Location GetLocation(string virtualPath)
         {
             if (String.IsNullOrWhiteSpace(virtualPath))
-                return Location.Empty();
+                return Location.Empty;
 
             Stack<string> virtualNamesForScan = new Stack<string>(virtualPath.Split(Separator.Path).Reverse());
             List<Folder> folders = new List<Folder>();
             string scanPath = _pageManager.GetPagesDirectory().FullName;
-
+                        
             while (!String.IsNullOrWhiteSpace(scanPath) && virtualNamesForScan.Count > 0)
             {
-                string directoryPath = Directory.GetDirectories(scanPath, "*." + virtualNamesForScan.Pop(), SearchOption.TopDirectoryOnly).FirstOrDefault();
+                Regex regex = new Regex($@"^(0*)([1-9]+)\.{virtualNamesForScan.Pop()}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                string directoryPath = Directory.GetDirectories(scanPath)
+                    .FirstOrDefault(x => regex.IsMatch(new DirectoryInfo(x).Name));
                 if (!String.IsNullOrEmpty(directoryPath))
                 {
                     string directoryName = new DirectoryInfo(directoryPath).Name;
@@ -153,9 +153,10 @@ namespace Documentor.Services.Impl
         private Location GetLocation(string virtualPath, int sequenceNumber)
         {
             Location location = GetLocation(virtualPath);
-            Regex regex = new Regex($"((0*){sequenceNumber}|{sequenceNumber}).*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            Regex regex = new Regex($@"^(0*){sequenceNumber}\.(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
             string directoryPath = Directory.EnumerateDirectories(Path.Combine(_pageManager.GetPagesDirectory().FullName, location.GetDirectoryPath()))
-                .FirstOrDefault(x => regex.IsMatch(x));
+                .FirstOrDefault(x => regex.IsMatch(new DirectoryInfo(x).Name));
 
             if (!String.IsNullOrEmpty(directoryPath))
             {
@@ -165,7 +166,7 @@ namespace Documentor.Services.Impl
             }
             else
             {
-                return Location.Empty();
+                return Location.Empty;
             }
         }
     }

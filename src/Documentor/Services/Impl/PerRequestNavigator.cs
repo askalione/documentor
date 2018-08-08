@@ -1,9 +1,7 @@
-﻿using Documentor.Config;
-using Documentor.Constants;
+﻿using Documentor.Constants;
 using Documentor.Models;
 using Documentor.Utilities;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -11,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Documentor.Services.Impl
@@ -22,6 +21,7 @@ namespace Documentor.Services.Impl
         private readonly IPageManager _pageManager;
 
         private Nav _navPerRequest;
+        private readonly Regex _directoryScanRegex;
 
         public PerRequestNavigator(ILogger<Pager> logger,
             ICacheManager cacheManager,
@@ -37,6 +37,8 @@ namespace Documentor.Services.Impl
             _logger = logger;
             _cacheManager = cacheManager;
             _pageManager = pageManager;
+
+            _directoryScanRegex = new Regex(@"^(0*)([1-9]+)\.(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
         public async Task<Nav> GetNavAsync()
@@ -83,18 +85,29 @@ namespace Documentor.Services.Impl
         public async Task<List<NavItem>> GetNavItemsAsync(DirectoryInfo scanDirectory, List<Folder> parentFolders)
         {
             List<NavItem> navItems = new List<NavItem>();
-            foreach (DirectoryInfo directory in scanDirectory.GetDirectories())
+
+            var test = scanDirectory
+                .GetDirectories()
+                .Where(x => _directoryScanRegex.IsMatch(x.Name));
+
+            foreach (DirectoryInfo directory in scanDirectory
+                .GetDirectories()
+                .Where(x => _directoryScanRegex.IsMatch(x.Name)))
             {
                 Folder folder = new Folder(directory.Name);
                 List<Folder> navItemparentFolders = parentFolders.ToList();
                 navItemparentFolders.Add(folder);
 
-                NavItem navItem = new NavItem(await GetNavItemDisplayNameAsync(String.Join(Separator.Path, navItemparentFolders.Select(x => x.DirectoryName)), folder.VirtualName),
-                    String.Join(Separator.Path, navItemparentFolders.Select(x => x.VirtualName)),
-                    folder.SequenceNumber);
-                (await GetNavItemsAsync(directory, navItemparentFolders))
-                    .ForEach(x => navItem.AddChild(x));
-                navItems.Add(navItem);
+                FileInfo pageFile = directory.GetFiles(Markdown.Filename, SearchOption.TopDirectoryOnly).FirstOrDefault();
+                if (pageFile != null)
+                {
+                    NavItem navItem = new NavItem(await GetNavItemDisplayNameAsync(String.Join(Separator.Path, navItemparentFolders.Select(x => x.DirectoryName)), folder.VirtualName),
+                        String.Join(Separator.Path, navItemparentFolders.Select(x => x.VirtualName)),
+                        folder.SequenceNumber);
+                    (await GetNavItemsAsync(directory, navItemparentFolders))
+                        .ForEach(x => navItem.AddChild(x));
+                    navItems.Add(navItem);
+                }
             }
             return navItems;
         }
@@ -102,9 +115,9 @@ namespace Documentor.Services.Impl
         private string ComputeNavHash()
         {
             StringBuilder sb = new StringBuilder();
-
             _pageManager.GetPagesDirectory()
-                .GetDirectories("*.*", SearchOption.AllDirectories)
+                .GetDirectories("*", SearchOption.AllDirectories)
+                .Where(x => _directoryScanRegex.IsMatch(x.Name))
                 .OrderBy(x => x.FullName)
                 .ToList()
                 .ForEach(directory =>
