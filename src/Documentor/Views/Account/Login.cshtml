@@ -1,0 +1,37 @@
+﻿@using Documentor.Services
+@inject ISignInManager SignInManager
+
+@{
+    Title = "Sign in";
+    Fullwidth = true;
+}
+
+<div class="sign-in">
+    <div class="sign-in__container">
+        <h1 class="sign-in__title">Sign in</h1>
+        @{
+            var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            if (loginProviders.Count == 0)
+            {
+                <div class="alert alert-warning">
+                    There are no authentication services configured.
+                </div>
+            }
+            else
+            {
+                @using (Html.BeginForm("ExternalLogin", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+                {
+                    <div class="btn-group-vertical btn-block">
+                        @foreach (var provider in loginProviders)
+                        {
+                            <button type="submit" class="btn btn-primary button" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                <span class="button__icon"><i class="la la-@provider.Name.ToLower()"></i></span>
+                                <span class="button__text">@provider.Name</span>                                
+                            </button>
+                        }
+                    </div>
+                    }
+                }
+        }
+    </div>
+</div>

@@ -394,3 +394,25 @@ a:focus, a:hover {
 .error__message {
     font-size: 1.8rem;
 }
+
+/* SignIn */
+
+.sign-in {
+    padding: 5rem;
+}
+
+.sign-in__container {
+    width: 100%;
+    max-width: 330px;
+    margin: 0 auto;
+}
+
+.sign-in__title {
+    margin-bottom: 30px;
+}
+
+/* Buttons */
+
+.button__icon {
+    margin-right: 10px;
+}

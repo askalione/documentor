@@ -2,8 +2,8 @@
 {
     public static class Cache
     {
-        public const string FileExtension = ".cache";
-        public const string PagePostfix = "_page";
-        public const string NavPostfix = "_nav";
+        public static readonly string FileExtension = ".cache";
+        public static readonly string PagePostfix = "_page";
+        public static readonly string NavPostfix = "_nav";
     }
 }

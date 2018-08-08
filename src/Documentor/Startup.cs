@@ -1,9 +1,12 @@
 ﻿using Documentor.Config;
+using Documentor.Models;
 using Documentor.Services;
 using Documentor.Services.Impl;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
@@ -13,8 +16,7 @@ namespace Documentor
 {
     public class Startup
     {
-        private readonly IConfiguration _configuration;
-        private readonly IHostingEnvironment _env;
+        public IConfiguration Configuration { get; }
 
         public Startup(IHostingEnvironment env)
         {
@@ -22,21 +24,45 @@ namespace Documentor
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-            _configuration = builder.Build();
-            _env = env;
+            Configuration = builder.Build();
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
-            services.AddOptions();
-            services.Configure<AppConfig>(_configuration.GetSection("App"));
-            services.Configure<IOConfig>(_configuration.GetSection("IO"));
+            services.AddHttpContextAccessor();
+
+            services.Configure<AppConfig>(Configuration.GetSection("App"));
+            services.Configure<IOConfig>(Configuration.GetSection("IO"));
+            services.AddScoped<ISignInManager, SignInManager>();
             services.AddSingleton<IMarkdownConverter, MarkdigConverter>();
             services.AddScoped<ICacheManager, CacheManager>();
             services.AddScoped<IPageManager, PageManager>();
             services.AddScoped<INavigator, PerRequestNavigator>();
             services.AddScoped<IPager, Pager>();
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+                    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+                    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+                })
+                .AddCookie(IdentityConstants.ApplicationScheme, o =>
+                {
+                    o.LoginPath = new PathString("/Account/Login");
+                    //o.Events = new CookieAuthenticationEvents
+                    //{
+                    //    OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+                    //};
+                })
+                .AddCookie(IdentityConstants.ExternalScheme, o =>
+                {
+                    o.Cookie.Name = IdentityConstants.ExternalScheme;
+                    o.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                })
+                .AddGoogleIfConfigured(Configuration);
+
+            services.AddOptions();
+            services.AddMvc();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -66,11 +92,18 @@ namespace Documentor
                 }
             });
 
+            app.UseAuthentication();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute("error",
                     "Error",
                     new { controller = "Errors", action = "Error" }
+                );
+
+                routes.MapRoute("account",
+                    "Account/{action}",
+                    new { controller = "Account", action = "Login" }
                 );
 
                 routes.MapRoute("pages",
