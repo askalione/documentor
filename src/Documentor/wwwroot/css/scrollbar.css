@@ -1,11 +1,11 @@
 /*************** SCROLLBAR BASE CSS ***************/
- 
+
 .scroll-wrapper {
     overflow: hidden !important;
     padding: 0 !important;
     position: relative;
 }
- 
+
 .scroll-wrapper > .scroll-content {
     border: none !important;
     box-sizing: content-box !important;
@@ -20,36 +20,39 @@
     top: 0;
     width: auto !important;
 }
- 
+
 .scroll-wrapper > .scroll-content::-webkit-scrollbar {
     height: 0;
     width: 0;
 }
- 
+
 .scroll-element {
     display: none;
 }
+
 .scroll-element, .scroll-element div {
     box-sizing: content-box;
 }
- 
+
 .scroll-element.scroll-x.scroll-scrollx_visible,
 .scroll-element.scroll-y.scroll-scrolly_visible {
     display: block;
 }
- 
+
 .scroll-element .scroll-bar,
 .scroll-element .scroll-arrow {
     cursor: default;
 }
- 
+
 .scroll-textarea {
     border: 1px solid #cccccc;
     border-top-color: #999999;
 }
+
 .scroll-textarea > .scroll-content {
     overflow: hidden !important;
 }
+
 .scroll-textarea > .scroll-content > textarea {
     border: none !important;
     box-sizing: border-box;
@@ -64,26 +67,26 @@
     top: 0;
     width: 100% !important;
 }
+
 .scroll-textarea > .scroll-content > textarea::-webkit-scrollbar {
     height: 0;
     width: 0;
 }
- 
- 
- 
- 
+
+
+
+
 /*************** SIMPLE INNER SCROLLBAR ***************/
- 
+
 .scrollbar-inner > .scroll-element,
-.scrollbar-inner > .scroll-element div
-{
+.scrollbar-inner > .scroll-element div {
     border: none;
     margin: 0;
     padding: 0;
     position: absolute;
     z-index: 10;
 }
- 
+
 .scrollbar-inner > .scroll-element div {
     display: block;
     height: 100%;
@@ -91,25 +94,25 @@
     top: 0;
     width: 100%;
 }
- 
+
 .scrollbar-inner > .scroll-element.scroll-x {
     bottom: 2px;
     height: 8px;
     left: 0;
     width: 100%;
 }
- 
+
 .scrollbar-inner > .scroll-element.scroll-y {
     height: 100%;
     right: 2px;
     top: 0;
     width: 8px;
 }
- 
+
 .scrollbar-inner > .scroll-element .scroll-element_outer {
     overflow: hidden;
 }
- 
+
 .scrollbar-inner > .scroll-element .scroll-element_outer,
 .scrollbar-inner > .scroll-element .scroll-element_track,
 .scrollbar-inner > .scroll-element .scroll-bar {
@@ -117,25 +120,46 @@
     -moz-border-radius: 8px;
     border-radius: 8px;
 }
- 
+
 .scrollbar-inner > .scroll-element .scroll-element_track,
 .scrollbar-inner > .scroll-element .scroll-bar {
-    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
     filter: alpha(opacity=40);
     opacity: 0.4;
 }
- 
-.scrollbar-inner > .scroll-element .scroll-element_track { background-color: #e0e0e0; }
-.scrollbar-inner > .scroll-element .scroll-bar { background-color: #c2c2c2; }
-.scrollbar-inner > .scroll-element:hover .scroll-bar { background-color: #919191; }
-.scrollbar-inner > .scroll-element.scroll-draggable .scroll-bar { background-color: #919191; }
- 
- 
+
+.scrollbar-inner > .scroll-element .scroll-element_track {
+    background-color: #e0e0e0;
+}
+
+.scrollbar-inner > .scroll-element .scroll-bar {
+    background-color: #c2c2c2;
+}
+
+.scrollbar-inner > .scroll-element:hover .scroll-bar {
+    background-color: #919191;
+}
+
+.scrollbar-inner > .scroll-element.scroll-draggable .scroll-bar {
+    background-color: #919191;
+}
+
+
 /* update scrollbar offset if both scrolls are visible */
- 
-.scrollbar-inner > .scroll-element.scroll-x.scroll-scrolly_visible .scroll-element_track { left: -12px; }
-.scrollbar-inner > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_track { top: -12px; }
- 
- 
-.scrollbar-inner > .scroll-element.scroll-x.scroll-scrolly_visible .scroll-element_size { left: -12px; }
-.scrollbar-inner > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_size { top: -12px; }
+
+.scrollbar-inner > .scroll-element.scroll-x.scroll-scrolly_visible .scroll-element_track {
+    left: -12px;
+}
+
+.scrollbar-inner > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_track {
+    top: -12px;
+}
+
+
+.scrollbar-inner > .scroll-element.scroll-x.scroll-scrolly_visible .scroll-element_size {
+    left: -12px;
+}
+
+.scrollbar-inner > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_size {
+    top: -12px;
+}

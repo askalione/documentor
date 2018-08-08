@@ -8,8 +8,8 @@ namespace Documentor.Models
         public PageMetadata Metadata { get; }
         public PageContent Content { get; }
 
-        public Page(PagePath path, 
-            PageMetadata metadata, 
+        public Page(PagePath path,
+            PageMetadata metadata,
             PageContent content)
         {
             if (path == null)

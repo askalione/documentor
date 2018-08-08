@@ -8,7 +8,7 @@ namespace Documentor.Models
         public Location Location { get; }
         public string Filename { get; }
 
-        public PagePath(Location location, 
+        public PagePath(Location location,
             string filename)
         {
             if (location == null)

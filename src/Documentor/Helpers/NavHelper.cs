@@ -9,12 +9,12 @@ namespace Documentor.Helpers
     {
         private const string _expandedItem = "sidebar-nav__item--expanded";
         private const string _activeItem = "sidebar-nav__item--active";
-        
+
         public static string NavItemState(this IHtmlHelper html, NavItem navItem, bool firstNavItem = false)
         {
             string requestPath = html.ViewContext.HttpContext.Request.Path.ToString().Trim(Separator.Path);
             int level = navItem.VirtualPath.Split(Separator.Path).Length;
-            
+
             bool expanded = false;
             bool active = false;
 

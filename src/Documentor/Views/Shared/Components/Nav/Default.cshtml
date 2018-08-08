@@ -2,7 +2,7 @@
 @using Documentor.Config
 @model Nav
 
-@{ 
+@{
     AppConfig appConfig = AppConfigOptions.Value;
 }
 
@@ -17,7 +17,7 @@
                         <span class="sidebar-nav__icon"></span>
                         @if (appConfig.ShowSequenceNumbers)
                         {
-                        <span class="sidebar-nav__sequence-number">@navItem.SequenceNumber.</span>
+                            <span class="sidebar-nav__sequence-number">@navItem.SequenceNumber.</span>
                         }
                         <span class="sidebar-nav__text">@navItem.DisplayName</span>
                     </a>

@@ -21,7 +21,7 @@ namespace Documentor
             IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            
+
             _configuration = builder.Build();
             _env = env;
         }
@@ -36,7 +36,7 @@ namespace Documentor
             services.AddScoped<ICacheManager, CacheManager>();
             services.AddScoped<IPageManager, PageManager>();
             services.AddScoped<INavigator, PerRequestNavigator>();
-            services.AddScoped<IPager, Pager>(); 
+            services.AddScoped<IPager, Pager>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -61,7 +61,7 @@ namespace Documentor
                     headers.CacheControl = new CacheControlHeaderValue()
                     {
                         Public = true,
-                        MaxAge = TimeSpan.FromDays(365)                        
+                        MaxAge = TimeSpan.FromDays(365)
                     };
                 }
             });

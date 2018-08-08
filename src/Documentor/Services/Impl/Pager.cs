@@ -108,7 +108,7 @@ namespace Documentor.Services.Impl
                 {
                     pageMetadata = JObject.Parse(metadata).ToObject<PageMetadata>();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     _logger.LogError(ex, "Metadata invalid");
                 }
@@ -128,7 +128,7 @@ namespace Documentor.Services.Impl
             Stack<string> virtualNamesForScan = new Stack<string>(virtualPath.Split(Separator.Path).Reverse());
             List<Folder> folders = new List<Folder>();
             string scanPath = _pageManager.GetPagesDirectory().FullName;
-                        
+
             while (!String.IsNullOrWhiteSpace(scanPath) && virtualNamesForScan.Count > 0)
             {
                 Regex regex = new Regex($@"^(0*)([1-9]+)\.{virtualNamesForScan.Pop()}", RegexOptions.Compiled | RegexOptions.IgnoreCase);

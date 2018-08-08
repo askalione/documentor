@@ -57,7 +57,7 @@ namespace Documentor.Services.Impl
 
         private string GetMetadataFilepath(string path)
         {
-            return Path.IsPathRooted(path) ? 
+            return Path.IsPathRooted(path) ?
                 Path.Combine(path, Metadata.Filename) :
                 Path.Combine(GetPagesDirectory().FullName, path, Metadata.Filename);
         }

@@ -19,7 +19,7 @@ namespace Documentor.Helpers
 
             if (!action.Equals("Page", StringComparison.OrdinalIgnoreCase) ||
                 !controller.Equals("Pages", StringComparison.OrdinalIgnoreCase))
-            return HtmlString.Empty;
+                return HtmlString.Empty;
 
             List<NavItem> breadcrumbsNavItems = new List<NavItem>();
 
@@ -64,7 +64,7 @@ namespace Documentor.Helpers
                 TagBuilder breadcrumbsItems = new TagBuilder("ul");
                 breadcrumbsItems.AddCssClass("breadcrumbs__items");
 
-                for(var i = 0; i < breadcrumbsNavItems.Count; i++)
+                for (var i = 0; i < breadcrumbsNavItems.Count; i++)
                 {
                     NavItem breadcrumbNavItem = breadcrumbsNavItems[i];
 

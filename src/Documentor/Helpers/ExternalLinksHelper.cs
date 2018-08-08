@@ -59,7 +59,7 @@ namespace Documentor.Helpers
                 TagBuilder itemIcon = new TagBuilder(link.UseImage ? "img" : "i");
                 itemIcon.AddCssClass("share__icon share__icon--" + (link.UseImage ? "image" : "font"));
                 if (link.UseImage)
-                    itemIcon.Attributes.Add("src", urlHelper.Content("~/images/icon-" + link.Name.ToLower() + ".svg")); 
+                    itemIcon.Attributes.Add("src", urlHelper.Content("~/images/icon-" + link.Name.ToLower() + ".svg"));
                 else
                     itemIcon.AddCssClass("la la-" + link.Name);
 

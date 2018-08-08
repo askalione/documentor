@@ -7,7 +7,7 @@ namespace Documentor.Models
         public string Markdown { get; }
         public string Html { get; }
 
-        public PageContent(string markdown, 
+        public PageContent(string markdown,
             string html)
         {
             if (markdown == null)

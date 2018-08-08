@@ -18,7 +18,7 @@ namespace Documentor.Models
 
             _folders = folders;
         }
-        
+
         public Folder GetBaseFolder()
         {
             return Folders.FirstOrDefault();
