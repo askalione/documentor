@@ -7,6 +7,11 @@
             </span>
         </button>
         <div class="dropdown-menu login__actions">
+            <a class="dropdown-item login__action" href="@Url.Action("Index", "Pages")">
+                <span class="login__action-icon la la-gear"></span>
+                <span class="login__action-name">Pages</span>
+            </a>
+            <div class="dropdown-divider"></div>
             <a class="dropdown-item login__action" href="@Url.Action("Logout", "Account")">
                 <span class="login__action-icon la la-sign-out"></span>
                 <span class="login__action-name">Logout</span>

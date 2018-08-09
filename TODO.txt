@@ -1,0 +1,5 @@
+# Create new page from Pages
+# Edit page metadata from Pages
+# Delete page from Pages
+
+# Search

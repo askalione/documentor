@@ -122,6 +122,11 @@ namespace Documentor
                     new { controller = "Account", action = "ExternalLoginCallback" }
                 );
 
+                routes.MapRoute("pages",
+                    "Pages",
+                    new { controller = "Pages", action = "Index" }
+                );
+
                 routes.MapRoute("edit-page",
                     "Edit/{*virtualPath}",
                     new { controller = "Pages", action = "Edit" }

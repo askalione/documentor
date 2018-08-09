@@ -396,6 +396,10 @@ a:focus, a:hover {
     float: right;
 }
 
+.page__title {
+    margin-bottom: 30px;
+}
+
 /* Footer */
 
 .footer {
@@ -507,10 +511,4 @@ a:focus, a:hover {
 
 .login__action-icon {
     margin-right: 5px;    
-}
-
-/* Page editor */
-
-.page__editor .CodeMirror {
-	height: 440px;
 }
