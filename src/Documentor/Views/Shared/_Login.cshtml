@@ -1,0 +1,16 @@
+﻿<div class="login">
+    <div class="dropdown">
+        <span class="login__icon la la-user"></span>
+        <button class="btn btn-link dropdown-toggle login__button" type="button" data-toggle="dropdown">
+            <span class="login__title">
+                Hello, <span class="login__name">@User.GetName()</span>
+            </span>
+        </button>
+        <div class="dropdown-menu login__actions">
+            <a class="dropdown-item login__action" href="@Url.Action("Logout", "Account")">
+                <span class="login__action-icon la la-sign-out"></span>
+                <span class="login__action-name">Logout</span>
+            </a>
+        </div>
+    </div>
+</div>

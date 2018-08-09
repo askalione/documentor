@@ -5,12 +5,12 @@
     Description = Model.Metadata.Description;
 }
 
-@await Component.InvokeAsync("Breadcrumbs")
-
-@if (User.Identity.IsAuthenticated)
-{
-    <h3>Привет, @User.FindFirstValue(ClaimTypes.GivenName)</h3>
-}
+<div class="page__header">
+    <div class="page__actions">
+        <a href="@Url.Action("Edit", new { virtualPath = Model.Path.Location.GetVirtualPath() })" class="page__action la la-edit" title="Edit page"></a>
+    </div>
+    @await Component.InvokeAsync("Breadcrumbs")
+</div>
 
 <div class="page-content">
     @Html.Raw(Model.Content.Html)

@@ -9,6 +9,12 @@
 <div class="sign-in">
     <div class="sign-in__container">
         <h1 class="sign-in__title">Sign in</h1>
+        @if (TempData.ContainsKey("TempDataProperty-ErrorMessage"))
+        {
+            <div class="alert alert-danger">
+                @TempData.Peek("TempDataProperty-ErrorMessage")
+            </div>
+        }
         @{
             var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (loginProviders.Count == 0)
@@ -21,17 +27,21 @@
             {
                 @using (Html.BeginForm("ExternalLogin", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
                 {
-                    <div class="btn-group-vertical btn-block">
+                    <div class="buttons">
                         @foreach (var provider in loginProviders)
                         {
-                            <button type="submit" class="btn btn-primary button" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                            <button type="submit" class="btn btn-primary btn-block button" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
                                 <span class="button__icon"><i class="la la-@provider.Name.ToLower()"></i></span>
-                                <span class="button__text">@provider.Name</span>                                
+                                <span class="button__text">@provider.Name</span>
                             </button>
                         }
                     </div>
-                    }
                 }
+            }
+
+            <p class="text-center" style="margin-top: 20px;">
+                <a href="@Url.Action("Page", "Pages")"><i class="la la-long-arrow-left" style="margin-right: 5px;"></i>Pages</a>
+            </p>
         }
     </div>
 </div>

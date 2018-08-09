@@ -40,6 +40,9 @@ namespace Documentor.Helpers
             TagBuilder wrapper = new TagBuilder("div");
             wrapper.AddCssClass("share scroller__section");
 
+            TagBuilder inner = new TagBuilder("div");
+            inner.AddCssClass("share__inner");
+
             TagBuilder items = new TagBuilder("ul");
             items.AddCssClass("share__items");
 
@@ -61,14 +64,15 @@ namespace Documentor.Helpers
                 if (link.UseImage)
                     itemIcon.Attributes.Add("src", urlHelper.Content("~/images/icon-" + link.Name.ToLower() + ".svg"));
                 else
-                    itemIcon.AddCssClass("la la-" + link.Name);
+                    itemIcon.AddCssClass("la la-" + link.Name.ToLower());
 
                 itemLink.InnerHtml.AppendHtml(itemIcon);
                 item.InnerHtml.AppendHtml(itemLink);
                 items.InnerHtml.AppendHtml(item);
             }
 
-            wrapper.InnerHtml.AppendHtml(items);
+            inner.InnerHtml.AppendHtml(items);
+            wrapper.InnerHtml.AppendHtml(inner);
 
             return wrapper;
         }

@@ -32,7 +32,8 @@ namespace Documentor
             services.AddHttpContextAccessor();
 
             services.Configure<AppConfig>(Configuration.GetSection("App"));
-            services.Configure<IOConfig>(Configuration.GetSection("IO"));
+            services.Configure<AuthorizationConfig>(Configuration.GetSection("Authorization"));
+            services.Configure<IOConfig>(Configuration.GetSection("IO"));            
             services.AddScoped<ISignInManager, SignInManager>();
             services.AddSingleton<IMarkdownConverter, MarkdigConverter>();
             services.AddScoped<ICacheManager, CacheManager>();
@@ -48,18 +49,18 @@ namespace Documentor
                 })
                 .AddCookie(IdentityConstants.ApplicationScheme, o =>
                 {
-                    o.LoginPath = new PathString("/Account/Login");
-                    //o.Events = new CookieAuthenticationEvents
-                    //{
-                    //    OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
-                    //};
+                    o.LoginPath = new PathString("/Login");
                 })
                 .AddCookie(IdentityConstants.ExternalScheme, o =>
                 {
                     o.Cookie.Name = IdentityConstants.ExternalScheme;
                     o.ExpireTimeSpan = TimeSpan.FromMinutes(5);
                 })
-                .AddGoogleIfConfigured(Configuration);
+                .AddGoogleIfConfigured(Configuration)
+                .AddGitHubIfConfigured(Configuration)
+                .AddFacebookIfConfigured(Configuration)
+                .AddYandexIfConfigured(Configuration)
+                .AddVkontakteIfConfigured(Configuration);
 
             services.AddOptions();
             services.AddMvc();
@@ -101,12 +102,32 @@ namespace Documentor
                     new { controller = "Errors", action = "Error" }
                 );
 
-                routes.MapRoute("account",
-                    "Account/{action}",
+                routes.MapRoute("login",
+                    "Login",
                     new { controller = "Account", action = "Login" }
                 );
 
-                routes.MapRoute("pages",
+                routes.MapRoute("logout",
+                    "Logout",
+                    new { controller = "Account", action = "Logout" }
+                );
+
+                routes.MapRoute("external-login",
+                    "ExternalLogin",
+                    new { controller = "Account", action = "ExternalLogin" }
+                );
+
+                routes.MapRoute("external-login-callback",
+                    "ExternalLoginCallback",
+                    new { controller = "Account", action = "ExternalLoginCallback" }
+                );
+
+                routes.MapRoute("edit-page",
+                    "Edit/{*virtualPath}",
+                    new { controller = "Pages", action = "Edit" }
+                );
+
+                routes.MapRoute("page",
                     "{*virtualPath}",
                     new { controller = "Pages", action = "Page" }
                 );

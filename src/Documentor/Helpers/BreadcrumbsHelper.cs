@@ -17,16 +17,19 @@ namespace Documentor.Helpers
             string action = routeData.Values["action"].ToString();
             string controller = routeData.Values["controller"].ToString();
 
-            if (!action.Equals("Page", StringComparison.OrdinalIgnoreCase) ||
+            if ((!action.Equals("Page", StringComparison.OrdinalIgnoreCase) && !action.Equals("Edit", StringComparison.OrdinalIgnoreCase)) ||
                 !controller.Equals("Pages", StringComparison.OrdinalIgnoreCase))
                 return HtmlString.Empty;
 
             List<NavItem> breadcrumbsNavItems = new List<NavItem>();
 
-            string request = html.ViewContext.HttpContext.Request.Path.ToString().Trim(Separator.Path);
-            if (!String.IsNullOrWhiteSpace(request))
+            string requestPath = html.ViewContext.HttpContext.Request.Path.ToString().Trim(Separator.Path);
+            string editPart = "Edit";
+            if (requestPath.StartsWith(editPart, StringComparison.OrdinalIgnoreCase))
+                requestPath = requestPath.Remove(0, editPart.Length).Trim(Separator.Path);
+            if (!String.IsNullOrWhiteSpace(requestPath))
             {
-                Stack<string> virtualNamesForScan = new Stack<string>(request.Split(Separator.Path).Reverse());
+                Stack<string> virtualNamesForScan = new Stack<string>(requestPath.Split(Separator.Path).Reverse());
 
                 void ScanNavItem(string virtualNameForScan, IEnumerable<NavItem> navItems)
                 {

@@ -13,6 +13,9 @@ namespace Documentor.Helpers
         public static string NavItemState(this IHtmlHelper html, NavItem navItem, bool firstNavItem = false)
         {
             string requestPath = html.ViewContext.HttpContext.Request.Path.ToString().Trim(Separator.Path);
+            string editPart = "Edit";
+            if (requestPath.StartsWith(editPart, StringComparison.OrdinalIgnoreCase))
+                requestPath = requestPath.Remove(0, editPart.Length).Trim(Separator.Path);
             int level = navItem.VirtualPath.Split(Separator.Path).Length;
 
             bool expanded = false;

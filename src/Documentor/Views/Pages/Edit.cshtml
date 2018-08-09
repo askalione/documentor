@@ -1,0 +1,33 @@
+﻿@model Page
+
+@{
+    Title = Model.Metadata.Title;
+    Description = Model.Metadata.Description;
+}
+
+@section Styles {
+    <link href="~/css/editor.min.css" rel="stylesheet" />
+}
+
+<div class="page__header">
+    <div class="page__actions">
+        <a href="@Url.Action("Page", new { virtualPath = Model.Path.Location.GetVirtualPath() })" class="page__action la la-undo" title="Back to view page"></a>
+    </div>
+    @await Component.InvokeAsync("Breadcrumbs")
+</div>
+
+<div class="page-content">
+    <div class="page__editor">
+        <div class="page__editor-overlay"></div>
+        @using (Html.BeginForm("Edit", "Pages", FormMethod.Post, new { @class = "page__editor-form" }))
+        {
+
+            <textarea id="editor" name="markdown" style="display: none;">@Model.Content.Markdown</textarea>
+            @Html.Hidden("virtualPath", Model.Path.Location.GetVirtualPath())
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/editor.min.js"></script>
+}

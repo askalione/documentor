@@ -1,7 +1,9 @@
 ﻿using Documentor.Models;
 using Documentor.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Documentor.Controllers
@@ -26,7 +28,25 @@ namespace Documentor.Controllers
 
             ViewBag.IsPage = true;
 
-            return View(model: page);
+            return View(page);
+        }
+        
+        [Authorize]
+        public async Task<IActionResult> Edit(string virtualPath, string markdown)
+        {
+            Page page = await _pager.GetPageAsync(virtualPath);
+            if (page == null)
+                return PageNotFound();
+
+            if (Request.Method.Equals(HttpMethod.Post.Method))
+            {
+                page = await _pager.EditPageAsync(page.Path, markdown);
+                return RedirectToAction(nameof(Page), new { virtualPath });
+            }
+
+            ViewBag.IsPage = true;
+
+            return View(page);
         }
     }
 }

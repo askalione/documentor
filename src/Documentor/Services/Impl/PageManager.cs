@@ -37,6 +37,16 @@ namespace Documentor.Services.Impl
             return pagesDirectory;
         }
 
+        public async Task<string> LoadPage(string path)
+        {
+            return await File.ReadAllTextAsync(GetPageFilepath(path));
+        }
+
+        public async Task SavePage(string path, string content)
+        {
+            await File.WriteAllTextAsync(GetPageFilepath(path), content ?? "");
+        }
+
         public async Task<string> LoadMetadataAsync(string path)
         {
             if (String.IsNullOrWhiteSpace(path))
@@ -60,6 +70,13 @@ namespace Documentor.Services.Impl
             return Path.IsPathRooted(path) ?
                 Path.Combine(path, Metadata.Filename) :
                 Path.Combine(GetPagesDirectory().FullName, path, Metadata.Filename);
+        }
+
+        private string GetPageFilepath(string path)
+        {
+            return Path.IsPathRooted(path) ?
+                path :
+                Path.Combine(GetPagesDirectory().FullName, path);
         }
     }
 }

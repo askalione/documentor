@@ -21,11 +21,13 @@
     <link rel="shortcut icon" href="~/images/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet" />
     <link href="~/css/site.min.css" rel="stylesheet" />
+    @await RenderSectionAsync("Styles", false)
 </head>
 <body class="@(Fullwidth ? "fullwidth": "")">
+    <div class="body-overlay"></div>
     @if (!Fullwidth)
     {
-        <aside class="sidebar">
+        <aside class="sidebar @(User.Identity.IsAuthenticated ? "sidebar--logged-in" : "")">
             <header class="header">
                 <div class="header__inner">
                     <div class="logo">
@@ -40,17 +42,25 @@
                     </div>
                 </div>
             </header>
-            @await Component.InvokeAsync("Nav")
-            @if (!String.IsNullOrWhiteSpace(appConfig.Download.Url))
+            @if(User.Identity.IsAuthenticated)
             {
-                <div class="share scroller__section">
-                    <a href="@appConfig.Download.Url" class="btn btn-primary btn-block download__button">
-                        <span class="download__button-icon"><i class="la la-download"></i></span>
-                        <span class="download__button-text">Download@(!String.IsNullOrWhiteSpace(appConfig.Download.Version) ? " v" + appConfig.Download.Version : "")</span>
-                    </a>
-                </div>
+                @await Html.PartialAsync("_Login")
             }
-            @Html.ExternalLinks(appConfig.ExternalLinks)
+            <div class="scroller scrollbar-inner">
+                @await Component.InvokeAsync("Nav")
+                @if (!String.IsNullOrWhiteSpace(appConfig.Download.Url))
+                {
+                    <div class="share scroller__section">
+                        <div class="share__inner">
+                            <a href="@appConfig.Download.Url" class="btn btn-primary btn-block download__button">
+                                <span class="download__button-icon"><i class="la la-download"></i></span>
+                                <span class="download__button-text">Download@(!String.IsNullOrWhiteSpace(appConfig.Download.Version) ? " v" + appConfig.Download.Version : "")</span>
+                            </a>
+                        </div>
+                    </div>
+                }
+                @Html.ExternalLinks(appConfig.ExternalLinks)
+            </div>
         </aside>
     }
     <div class="content">
@@ -74,5 +84,6 @@
 
     </div>
     <script src="~/js/site.min.js"></script>
+    @await RenderSectionAsync("Scripts", false)
 </body>
 </html>

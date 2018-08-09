@@ -6,11 +6,18 @@ using System.Threading.Tasks;
 
 namespace Documentor.Services
 {
+    public enum SignInResult
+    {
+        Failure,
+        Successfully,
+        AccessDenied
+    }
+
     public interface ISignInManager
     {
         Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemesAsync();
         AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string redirectUrl);
-        Task<bool> TrySignInAsync(bool isPersistent);
+        Task<SignInResult> TrySignInAsync(bool isPersistent);
         Task SignOutAsync();
     }
 }

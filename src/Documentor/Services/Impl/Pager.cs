@@ -51,6 +51,26 @@ namespace Documentor.Services.Impl
             return new Page(pagePath, pageMetadata, pageContent);
         }
 
+        public async Task<Page> EditPageAsync(PagePath pagePath, string markdown)
+        {
+            if (pagePath == null)
+                throw new ArgumentNullException(nameof(pagePath));
+
+            DirectoryInfo pagesDirectory = _pageManager.GetPagesDirectory();
+            FileInfo pageFileInfo = new FileInfo(Path.Combine(pagesDirectory.FullName, pagePath.ToString()));
+
+            string pageLocationHash = Hasher.GetMd5Hash(pagePath.Location.GetDirectoryPath());
+            string pageCachename = pageLocationHash + "_" + pageFileInfo.LastWriteTime.ToString("yyyyMMddHHmmss") + Cache.PagePostfix;
+            _cacheManager.ClearCache(pageCachename);
+
+            await _pageManager.SavePage(pageFileInfo.FullName, markdown);
+
+            PageContent pageContent = await GetPageContentAsync(pagePath);
+            PageMetadata pageMetadata = await GetPageMetadataAsync(pagePath);
+
+            return new Page(pagePath, pageMetadata, pageContent);
+        }
+
         private PagePath GetPagePath(string virtualPath)
         {
             Location location = !String.IsNullOrWhiteSpace(virtualPath) ?
@@ -80,7 +100,7 @@ namespace Documentor.Services.Impl
             string pageCachename = pageLocationHash + "_" + pageFileInfo.LastWriteTime.ToString("yyyyMMddHHmmss") + Cache.PagePostfix;
             string pageCache = await _cacheManager.LoadFromCacheAsync(pageCachename);
 
-            string markdown = await File.ReadAllTextAsync(pageFileInfo.FullName);
+            string markdown = await _pageManager.LoadPage(pageFileInfo.FullName);
             string html;
             if (!String.IsNullOrEmpty(pageCache))
             {

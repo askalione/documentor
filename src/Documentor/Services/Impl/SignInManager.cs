@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Documentor.Config;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,17 +16,22 @@ namespace Documentor.Services.Impl
         private const string _loginProviderKey = "LoginProvider";
         private const string _xsrfKey = "XsrfId";
 
+        private readonly AuthorizationConfig _authorizationConfig;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IAuthenticationSchemeProvider _schemes;
 
-        public SignInManager(IHttpContextAccessor contextAccessor,
+        public SignInManager(IOptionsSnapshot<AuthorizationConfig> configOptions,
+            IHttpContextAccessor contextAccessor,
             IAuthenticationSchemeProvider schemes)
         {
+            if (configOptions == null)
+                throw new ArgumentNullException(nameof(configOptions));
             if (contextAccessor == null)
                 throw new ArgumentNullException(nameof(contextAccessor));
             if (schemes == null)
                 throw new ArgumentNullException(nameof(schemes));
 
+            _authorizationConfig = configOptions.Value;
             _contextAccessor = contextAccessor;
             _schemes = schemes;
         }
@@ -41,18 +48,22 @@ namespace Documentor.Services.Impl
             return properties;
         }
 
-        public async Task<bool> TrySignInAsync(bool isPersistent)
+        public async Task<SignInResult> TrySignInAsync(bool isPersistent)
         {
             ClaimsPrincipal externalClaimsPrincipal = await GetExternalClaimsPrincipal();
             if (externalClaimsPrincipal == null)
-                return false;
+                return SignInResult.Failure;
+
+            string email = externalClaimsPrincipal.FindFirstValue(ClaimTypes.Email);
+            if (String.IsNullOrWhiteSpace(email) || !_authorizationConfig.Emails.Contains(email))
+                return SignInResult.AccessDenied;
 
             ClaimsPrincipal userPrincipal = CreateClaimsPrincipal(externalClaimsPrincipal);
             AuthenticationProperties authenticationProperties = new AuthenticationProperties { IsPersistent = isPersistent };
             await _contextAccessor.HttpContext.SignInAsync(IdentityConstants.ApplicationScheme,
                 userPrincipal,
                 authenticationProperties);
-            return true;
+            return SignInResult.Successfully;
         }
 
         public virtual async Task SignOutAsync()
@@ -60,7 +71,6 @@ namespace Documentor.Services.Impl
             var context = _contextAccessor.HttpContext;
             await context.SignOutAsync(IdentityConstants.ApplicationScheme);
             await context.SignOutAsync(IdentityConstants.ExternalScheme);
-            await context.SignOutAsync(IdentityConstants.TwoFactorUserIdScheme);
         }
 
         private async Task<ClaimsPrincipal> GetExternalClaimsPrincipal()
@@ -84,10 +94,13 @@ namespace Documentor.Services.Impl
                 ClaimTypes.Name,
                 ClaimTypes.Role);
 
-            claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, externalClaimsPrincipal.FindFirstValue(ClaimTypes.Email)));
-            claimsIdentity.AddClaim(new Claim(ClaimTypes.GivenName, externalClaimsPrincipal.FindFirstValue(ClaimTypes.GivenName)));
+            claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, externalClaimsPrincipal.FindFirstValue(ClaimTypes.Email)));            
             claimsIdentity.AddClaim(new Claim(ClaimTypes.Name, externalClaimsPrincipal.FindFirstValue(ClaimTypes.Name)));
             claimsIdentity.AddClaim(new Claim(ClaimTypes.Email, externalClaimsPrincipal.FindFirstValue(ClaimTypes.Email)));
+
+            string givenName = externalClaimsPrincipal.FindFirstValue(ClaimTypes.GivenName);
+            if (!String.IsNullOrEmpty(givenName))
+                claimsIdentity.AddClaim(new Claim(ClaimTypes.GivenName, givenName));
 
             return new ClaimsPrincipal(claimsIdentity);
         }

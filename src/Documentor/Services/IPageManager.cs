@@ -6,7 +6,9 @@ namespace Documentor.Services
     public interface IPageManager
     {
         DirectoryInfo GetPagesDirectory();
-        Task<string> LoadMetadataAsync(string path);
+        Task<string> LoadPage(string path);
+        Task SavePage(string path, string content);
+        Task<string> LoadMetadataAsync(string path);        
         FileInfo GetMetadataFile(string path);
     }
 }

@@ -28,6 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="2.0.0" />
+    <PackageReference Include="AspNet.Security.OAuth.Vkontakte" Version="2.0.0" />
+    <PackageReference Include="AspNet.Security.OAuth.Yandex" Version="2.0.0" />
     <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
     <PackageReference Include="Markdig" Version="0.15.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.2" />
@@ -45,8 +48,10 @@
   <ItemGroup>
     <Content Remove="wwwroot\css\*" CopyToPublishDirectory="Never" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
     <Content Include="wwwroot\css\site.min.css" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+    <Content Include="wwwroot\css\editor.min.css" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
     <Content Remove="wwwroot\js\*" CopyToPublishDirectory="Never" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
     <Content Include="wwwroot\js\site.min.js" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+    <Content Include="wwwroot\js\editor.min.js" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
   </ItemGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

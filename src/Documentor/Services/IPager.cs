@@ -6,5 +6,6 @@ namespace Documentor.Services
     public interface IPager
     {
         Task<Page> GetPageAsync(string virtualPath);
+        Task<Page> EditPageAsync(PagePath pagePath, string markdown);
     }
 }
