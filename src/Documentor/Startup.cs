@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Net.Http.Headers;
 using System;
 
@@ -30,6 +32,7 @@ namespace Documentor
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpContextAccessor();
+            services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             services.Configure<AppConfig>(Configuration.GetSection("App"));
             services.Configure<AuthorizationConfig>(Configuration.GetSection("Authorization"));
@@ -86,11 +89,23 @@ namespace Documentor
                 OnPrepareResponse = ctx =>
                 {
                     var headers = ctx.Context.Response.GetTypedHeaders();
-                    headers.CacheControl = new CacheControlHeaderValue()
+                    if (env.IsDevelopment())
                     {
-                        Public = true,
-                        MaxAge = TimeSpan.FromDays(365)
-                    };
+                        headers.CacheControl = new CacheControlHeaderValue()
+                        {
+                            NoCache = true,
+                            NoStore = true
+                        };
+                        headers.Expires = DateTime.Now.AddDays(-1);
+                    }
+                    else
+                    {                        
+                        headers.CacheControl = new CacheControlHeaderValue()
+                        {
+                            Public = true,
+                            MaxAge = TimeSpan.FromDays(365)
+                        };
+                    } 
                 }
             });
 

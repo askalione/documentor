@@ -6,15 +6,12 @@
 }
 
 @section Styles {
-    <link href="~/css/editor.min.css" rel="stylesheet" />
+    <bundle name="~/css/editor.min.css"></bundle>
 }
 
-<div class="page__header">
-    <div class="page__actions">
-        <a href="@Url.Action("Page", new { virtualPath = Model.Path.Location.GetVirtualPath() })" class="page__action la la-undo" title="Back to view page"></a>
-    </div>
-    @await Component.InvokeAsync("Breadcrumbs")
-</div>
+@section PageActions {
+    <a href="/@Model.Path.Location.GetVirtualPath()" class="page__action la la-undo" title="Back to view page"></a>
+}
 
 <div class="page-content">
     <div class="page__editor">
@@ -29,5 +26,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/editor.min.js"></script>
+    <bundle name="~/js/editor.min.js"></bundle>
 }

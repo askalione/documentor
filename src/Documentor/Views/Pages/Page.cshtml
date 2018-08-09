@@ -5,12 +5,9 @@
     Description = Model.Metadata.Description;
 }
 
-<div class="page__header">
-    <div class="page__actions">
-        <a href="@Url.Action("Edit", new { virtualPath = Model.Path.Location.GetVirtualPath() })" class="page__action la la-edit" title="Edit page"></a>
-    </div>
-    @await Component.InvokeAsync("Breadcrumbs")
-</div>
+@section PageActions {
+    <a href="/Edit/@Model.Path.Location.GetVirtualPath()" class="page__action la la-edit" title="Edit page"></a>
+}
 
 <div class="page-content">
     @Html.Raw(Model.Content.Html)

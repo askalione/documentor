@@ -5,7 +5,7 @@
     <ul class="sidebar-nav__subitems">
         @foreach (NavItem navItem in Model)
         {
-            <li class="sidebar-nav__subitem @Html.NavItemState(navItem)">
+            <li nav-item="navItem" is-first="false" is-sub-item="true">
                 <a href="/@navItem.VirtualPath" class="sidebar-nav__link">
                     <span class="sidebar-nav__text">@navItem.DisplayName</span>
                 </a>

@@ -15,12 +15,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     @if (!String.IsNullOrEmpty(Description))
     {
-        <meta name="description" content="@Description">}
+        <meta name="description" content="@Description">
+    }
     <meta name="generator" content="Documentor @appVersion">
     <title>@Title</title>
     <link rel="shortcut icon" href="~/images/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet" />
-    <link href="~/css/site.min.css" rel="stylesheet" />
+    <bundle name="~/css/site.min.css"></bundle>
     @await RenderSectionAsync("Styles", false)
 </head>
 <body class="@(Fullwidth ? "fullwidth": "")">
@@ -59,7 +60,7 @@
                         </div>
                     </div>
                 }
-                @Html.ExternalLinks(appConfig.ExternalLinks)
+                <external-links></external-links>
             </div>
         </aside>
     }
@@ -82,10 +83,7 @@
                         @RenderSection("PageActions", false)
                     }
                 </div>
-                @if (Breadcrumbs)
-                {
-                    @Html.Breadcrumbs()
-                }
+                <breadcrumbs show="Breadcrumbs"></breadcrumbs>
             </div>
             @RenderBody()
         </main>
@@ -95,7 +93,7 @@
         </footer>
 
     </div>
-    <script src="~/js/site.min.js"></script>
+    <bundle name="~/js/site.min.js"></bundle>
     @await RenderSectionAsync("Scripts", false)
 </body>
 </html>

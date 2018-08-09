@@ -44,12 +44,6 @@
     <Content Update="nlog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="Views\Pages\_PagesTree.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
-    <Content Update="wwwroot\css\app\editor.min.css">
-      <DependentUpon>editor.css</DependentUpon>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>

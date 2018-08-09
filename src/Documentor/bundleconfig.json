@@ -29,7 +29,7 @@
       "wwwroot/js/vendors/popper.min.js",
       "wwwroot/js/vendors/bootstrap.min.js",
       "wwwroot/js/vendors/jquery.scrollbar.min.js",
-      "wwwroot/js/site.js"
+      "wwwroot/js/app/site.js"
     ],
     "minify": {
       "enabled": true,

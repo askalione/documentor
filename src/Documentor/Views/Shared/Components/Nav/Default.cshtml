@@ -12,7 +12,7 @@
         <ul class="sidebar-nav__items">
             @foreach (NavItem navItem in Model.Items)
             {
-                <li class="sidebar-nav__item @Html.NavItemState(navItem, navItem == Model.Items.First())">
+                <li nav-item="navItem" is-first="navItem == Model.Items.First()" is-sub-item="false">
                     <a href="/@navItem.VirtualPath" class="sidebar-nav__link">
                         <span class="sidebar-nav__icon"></span>
                         @if (appConfig.ShowSequenceNumbers)
