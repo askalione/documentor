@@ -63,6 +63,7 @@ namespace Documentor
                 .AddVkontakteIfConfigured(Configuration);
 
             services.AddOptions();
+            services.AddBreadcrumbs();
             services.AddMvc();
         }
 

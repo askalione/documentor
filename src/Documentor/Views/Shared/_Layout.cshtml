@@ -42,7 +42,7 @@
                     </div>
                 </div>
             </header>
-            @if(User.Identity.IsAuthenticated)
+            @if (User.Identity.IsAuthenticated)
             {
                 @await Html.PartialAsync("_Login")
             }
@@ -75,6 +75,18 @@
         }
 
         <main class="main">
+            <div class="page__header">
+                <div class="page__actions">
+                    @if (IsSectionDefined("PageActions"))
+                    {
+                        @RenderSection("PageActions", false)
+                    }
+                </div>
+                @if (Breadcrumbs)
+                {
+                    @Html.Breadcrumbs()
+                }
+            </div>
             @RenderBody()
         </main>
 

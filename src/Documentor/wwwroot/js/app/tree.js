@@ -1,7 +1,9 @@
 ﻿(function () {
 
     $(document).ready(function () {
-        $('.tree__items').jstree({
+        var $tree = $('.tree__items');
+
+        $tree.jstree({
             'core': {
                 'check_callback': true
             },
@@ -11,6 +13,12 @@
                 }
             },
             'plugins': ['types', 'dnd']
+        });
+
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('.jstree').length) {
+                $tree.jstree(true).deselect_all();
+            }
         });
     });
 
