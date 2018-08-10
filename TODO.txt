@@ -2,4 +2,12 @@
 # Edit page metadata from Pages
 # Delete page from Pages
 
+# Users (Access)
+
+# robots.txt
+
+-- Extensibility!
+
 # Search
+
+#? Themes

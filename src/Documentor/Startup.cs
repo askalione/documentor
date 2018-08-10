@@ -1,11 +1,10 @@
 ﻿using Documentor.Config;
-using Documentor.Models;
 using Documentor.Services;
 using Documentor.Services.Impl;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
@@ -50,14 +49,14 @@ namespace Documentor
                     options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
                     options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
                 })
-                .AddCookie(IdentityConstants.ApplicationScheme, o =>
+                .AddCookie(IdentityConstants.ApplicationScheme, options =>
                 {
-                    o.LoginPath = new PathString("/Login");
+                    options.LoginPath = new PathString("/Login");
                 })
-                .AddCookie(IdentityConstants.ExternalScheme, o =>
+                .AddCookie(IdentityConstants.ExternalScheme, options =>
                 {
-                    o.Cookie.Name = IdentityConstants.ExternalScheme;
-                    o.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                    options.Cookie.Name = IdentityConstants.ExternalScheme;
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
                 })
                 .AddGoogleIfConfigured(Configuration)
                 .AddGitHubIfConfigured(Configuration)
@@ -86,9 +85,9 @@ namespace Documentor
 
             app.UseStaticFiles(new StaticFileOptions
             {
-                OnPrepareResponse = ctx =>
+                OnPrepareResponse = context =>
                 {
-                    var headers = ctx.Context.Response.GetTypedHeaders();
+                    ResponseHeaders headers = context.Context.Response.GetTypedHeaders();
                     if (env.IsDevelopment())
                     {
                         headers.CacheControl = new CacheControlHeaderValue()
