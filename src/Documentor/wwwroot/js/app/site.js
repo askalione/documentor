@@ -14,7 +14,7 @@
             var that = this;
 
             $('.sidebar-toggle').on('click', function (e) {
-                $('.sidebar').toggleClass('sidebar--expanded');
+                $('body').toggleClass('sidebar--expanded');
                 e.preventDefault();
             });
 
@@ -23,7 +23,7 @@
             });
 
             $(window).resize(function (e) {
-                $('.sidebar').removeClass('sidebar--expanded');
+                $('body').removeClass('sidebar--expanded');
             });
         }
     };

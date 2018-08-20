@@ -98,8 +98,7 @@ namespace Microsoft.Extensions.DependencyInjection
         private static void AddOAuthIfConfigured(
             string configurationSectionName,
             Action<string, string> registration,
-            IConfiguration configuration
-            )
+            IConfiguration configuration)
         {
             string clienId = configuration[$"Authentication:{configurationSectionName}:ClientId"];
             string clientSecret = configuration[$"Authentication:{configurationSectionName}:ClientSecret"];

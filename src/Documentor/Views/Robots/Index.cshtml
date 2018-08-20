@@ -1,0 +1,17 @@
+﻿@model RobotsEditCommand
+
+@{
+    Title = "Robots";
+}
+
+<h1 class="page__title">@Title</h1>
+
+@using (Html.BeginForm("Index", "Robots", null, FormMethod.Post))
+{
+    @Html.ValidationSummary(true)
+    <div class="form-group">
+        @Html.TextAreaFor(m => m.Content, new { @rows = 16, @class = "form-control" })
+        <small class="form-text text-muted">What is <a href="https://moz.com/learn/seo/robotstxt" target="_blank" rel="nofollow">robots.txt</a>?</small>
+    </div>
+    <button type="submit" class="btn btn-success button"><i class="la la-save button__icon"></i>Save</button>
+}

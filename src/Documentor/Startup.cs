@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 
 namespace Documentor
@@ -34,14 +36,15 @@ namespace Documentor
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             services.Configure<AppConfig>(Configuration.GetSection("App"));
-            services.Configure<AuthorizationConfig>(Configuration.GetSection("Authorization"));
-            services.Configure<IOConfig>(Configuration.GetSection("IO"));            
+            services.Configure<IOConfig>(Configuration.GetSection("IO"));
+            services.ConfigureModifier<AuthorizationConfig>(Configuration.GetSection("Authorization"));
             services.AddScoped<ISignInManager, SignInManager>();
             services.AddSingleton<IMarkdownConverter, MarkdigConverter>();
             services.AddScoped<ICacheManager, CacheManager>();
             services.AddScoped<IPageManager, PageManager>();
             services.AddScoped<INavigator, PerRequestNavigator>();
             services.AddScoped<IPager, Pager>();
+            services.AddScoped<IDumper, Dumper>();
 
             services.AddAuthentication(options =>
                 {
@@ -66,7 +69,12 @@ namespace Documentor
 
             services.AddOptions();
             services.AddBreadcrumbs();
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -135,6 +143,21 @@ namespace Documentor
                 routes.MapRoute("external-login-callback",
                     "ExternalLoginCallback",
                     new { controller = "Account", action = "ExternalLoginCallback" }
+                );
+
+                routes.MapRoute("users",
+                    "Users/{action}",
+                    new { controller = "Users", action = "Index" }
+                );
+
+                routes.MapRoute("robots",
+                    "Robots",
+                    new { controller = "Robots", action = "Index" }
+                );
+
+                routes.MapRoute("dump",
+                    "Dump",
+                    new { controller = "Dump", action = "Index" }
                 );
 
                 routes.MapRoute("pages",

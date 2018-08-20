@@ -1,0 +1,8 @@
+﻿User-agent: *
+Disallow: /Login
+Disallow: /Logout
+Disallow: /Pages
+Disallow: /Edit
+Disallow: /Robots
+Disallow: /Users
+Disallow: /

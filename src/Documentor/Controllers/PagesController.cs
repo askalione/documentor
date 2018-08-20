@@ -1,4 +1,5 @@
 ﻿using Documentor.Constants;
+using Documentor.Extensions;
 using Documentor.Models;
 using Documentor.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -59,7 +60,8 @@ namespace Documentor.Controllers
             if (Request.Method.Equals(HttpMethod.Post.Method))
             {
                 page = await _pager.EditPageAsync(page.Path, markdown);
-                return RedirectToAction(nameof(Page), new { virtualPath });
+                return RedirectToAction(nameof(Page), new { virtualPath })
+                    .Notify(NotificationType.Success, "Changes have been saved");
             }
 
             BuildBreadcrumbs(virtualPath, await _navigator.GetNavAsync());

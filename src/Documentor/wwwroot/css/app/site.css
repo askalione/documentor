@@ -57,13 +57,14 @@ a:focus, a:hover {
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     transition: all 0.5s ease;
+    z-index: 999;
 }
 
 .sidebar--logged-in {
     padding-bottom: 160px;
 }
 
-.sidebar--expanded {
+.sidebar--expanded .sidebar {
     left: 0 !important;
 }
 
@@ -303,7 +304,7 @@ a:focus, a:hover {
     margin-left: 300px;
 }
 
-.sidebar--expanded + .content {
+.sidebar--expanded .content {
     margin-left: 300px;
 }
 
@@ -316,7 +317,7 @@ a:focus, a:hover {
         margin-left: 0;
     }
 
-    .sidebar--expanded + .content {
+    .sidebar--expanded .content {
         margin-left: 240px;
     }
 }
@@ -332,7 +333,7 @@ a:focus, a:hover {
     margin: -20px;
 }
 
-.sidebar--expanded + .content .content-overlay {
+.sidebar--expanded .content .content-overlay {
     display: block;
 }
 

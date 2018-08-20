@@ -5,6 +5,8 @@
       "wwwroot/css/vendors/line-awesome.min.css",
       "wwwroot/css/vendors/bootstrap.min.css",
       "wwwroot/css/vendors/scrollbar.css",
+      "wwwroot/css/vendors/toastr.min.css",
+      "wwwroot/css/app/notifications.css",
       "wwwroot/css/app/site.css"
     ]
   },
@@ -29,6 +31,8 @@
       "wwwroot/js/vendors/popper.min.js",
       "wwwroot/js/vendors/bootstrap.min.js",
       "wwwroot/js/vendors/jquery.scrollbar.min.js",
+      "wwwroot/js/vendors/toastr.min.js",
+      "wwwroot/js/app/notifications.js",
       "wwwroot/js/app/site.js"
     ],
     "minify": {
@@ -54,6 +58,17 @@
     "inputFiles": [
       "wwwroot/js/vendors/jstree.min.js",
       "wwwroot/js/app/tree.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/js/users.min.js",
+    "inputFiles": [
+      "wwwroot/js/app/users.js"
     ],
     "minify": {
       "enabled": true,
