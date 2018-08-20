@@ -1,8 +1,10 @@
+# Real world example for demo page
+
 # Create new page from Pages
 # Edit page metadata from Pages
 # Delete page from Pages
 
-# Users (Access)
+# Users (Access per email)
 
 # robots.txt
 
