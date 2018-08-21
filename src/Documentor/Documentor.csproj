@@ -32,12 +32,12 @@
     <PackageReference Include="AspNet.Security.OAuth.Vkontakte" Version="2.0.0" />
     <PackageReference Include="AspNet.Security.OAuth.Yandex" Version="2.0.0" />
     <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
-    <PackageReference Include="DotNetZip" Version="1.11.0" />
     <PackageReference Include="Markdig" Version="0.15.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
     <PackageReference Include="NLog" Version="4.5.8" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.6.0" />
+    <PackageReference Include="SharpZipLib" Version="1.0.0" />
     <PackageReference Include="SmartBreadcrumbs" Version="1.0.3.2" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
 ﻿using Documentor.Config;
+using Documentor.Infrastructure;
 using Documentor.Services;
 using Documentor.Services.Impl;
 using Microsoft.AspNetCore.Builder;
@@ -19,6 +20,7 @@ namespace Documentor
 {
     public class Startup
     {
+        public const string ManagementRoutePrefix = "m";
         public IConfiguration Configuration { get; }
 
         public Startup(IHostingEnvironment env)
@@ -44,7 +46,7 @@ namespace Documentor
             services.AddScoped<IPageManager, PageManager>();
             services.AddScoped<INavigator, PerRequestNavigator>();
             services.AddScoped<IPager, Pager>();
-            services.AddScoped<IDumper, Dumper>();
+            services.AddScoped<IDumpProcessor, DumpProcessor>();
 
             services.AddAuthentication(options =>
                 {
@@ -54,7 +56,7 @@ namespace Documentor
                 })
                 .AddCookie(IdentityConstants.ApplicationScheme, options =>
                 {
-                    options.LoginPath = new PathString("/Login");
+                    options.LoginPath = new PathString($"/{ManagementRoutePrefix}/Account/Login");
                 })
                 .AddCookie(IdentityConstants.ExternalScheme, options =>
                 {
@@ -125,48 +127,14 @@ namespace Documentor
                     new { controller = "Errors", action = "Error" }
                 );
 
-                routes.MapRoute("login",
-                    "Login",
-                    new { controller = "Account", action = "Login" }
-                );
-
-                routes.MapRoute("logout",
-                    "Logout",
-                    new { controller = "Account", action = "Logout" }
-                );
-
-                routes.MapRoute("external-login",
-                    "ExternalLogin",
-                    new { controller = "Account", action = "ExternalLogin" }
-                );
-
-                routes.MapRoute("external-login-callback",
-                    "ExternalLoginCallback",
-                    new { controller = "Account", action = "ExternalLoginCallback" }
-                );
-
-                routes.MapRoute("users",
-                    "Users/{action}",
-                    new { controller = "Users", action = "Index" }
-                );
-
-                routes.MapRoute("robots",
-                    "Robots",
-                    new { controller = "Robots", action = "Index" }
-                );
-
-                routes.MapRoute("dump",
-                    "Dump",
-                    new { controller = "Dump", action = "Index" }
-                );
-
-                routes.MapRoute("pages",
-                    "Pages",
-                    new { controller = "Pages", action = "Index" }
+                routes.MapRoute("manage",
+                    ManagementRoutePrefix + "/{controller}/{action}",
+                    new { action = "Index" },
+                    new { isPage = new PageConstraint() }
                 );
 
                 routes.MapRoute("edit-page",
-                    "Edit/{*virtualPath}",
+                    ManagementRoutePrefix + "/Edit/{*virtualPath}",
                     new { controller = "Pages", action = "Edit" }
                 );
 

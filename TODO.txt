@@ -4,8 +4,6 @@
 # Edit page metadata from Pages
 # Delete page from Pages
 
-# Import/Export Pages.zip
-
 -- Extensibility!
 
 # Search

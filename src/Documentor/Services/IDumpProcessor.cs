@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace Documentor.Services
 {
-    public interface IDumper
+    public interface IDumpProcessor
     {
-        byte[] Export();
-        //void Import(byte[] dump);
+        byte[] ExportDump();
     }
 }

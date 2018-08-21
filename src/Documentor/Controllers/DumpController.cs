@@ -9,9 +9,9 @@ namespace Documentor.Controllers
 {
     public class DumpController : BaseController
     {
-        private readonly IDumper _dumper;
+        private readonly IDumpProcessor _dumper;
 
-        public DumpController(IDumper dumper)
+        public DumpController(IDumpProcessor dumper)
         {
             if (dumper == null)
                 throw new ArgumentNullException(nameof(dumper));
@@ -19,10 +19,10 @@ namespace Documentor.Controllers
             _dumper = dumper;
         }
 
-        public IActionResult Index()
+        public IActionResult Export()
         {
-            byte[] dump = _dumper.Export();
-            return File(dump, "application/zip, application/octet-stream", $"Dump_{DateTime.Today.ToString("dd.mm.yyyy")}.zip");
+            byte[] dump = _dumper.ExportDump();
+            return File(dump, "application/zip", $"Dump_{DateTime.Today.ToString("dd.MM.yyyy")}.zip");
         }
     }
 }
