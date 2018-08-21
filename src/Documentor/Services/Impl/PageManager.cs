@@ -1,7 +1,9 @@
 ﻿using Documentor.Config;
 using Documentor.Constants;
+using Documentor.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -39,12 +41,12 @@ namespace Documentor.Services.Impl
 
         public async Task<string> LoadPage(string path)
         {
-            return await File.ReadAllTextAsync(GetPageFilepath(path));
+            return await File.ReadAllTextAsync(GetPageFilePath(path));
         }
 
         public async Task SavePage(string path, string content)
         {
-            await File.WriteAllTextAsync(GetPageFilepath(path), content ?? "");
+            await File.WriteAllTextAsync(GetPageFilePath(path), content ?? "");
         }
 
         public async Task<string> LoadMetadataAsync(string path)
@@ -56,23 +58,32 @@ namespace Documentor.Services.Impl
             return matadataFile != null ? await File.ReadAllTextAsync(matadataFile.FullName) : null;
         }
 
+        public async Task SaveMetadataAsync(string path, PageMetadata metadata)
+        {
+            if (metadata == null)
+                throw new ArgumentNullException(nameof(metadata));
+
+            string metadataPath = GetMetadataFilePath(path);
+            await File.WriteAllTextAsync(metadataPath, JsonConvert.SerializeObject(metadata));
+        }
+
         public FileInfo GetMetadataFile(string path)
         {
             if (String.IsNullOrWhiteSpace(path))
                 throw new ArgumentNullException(nameof(path));
 
-            FileInfo matadataFile = new FileInfo(GetMetadataFilepath(path));
+            FileInfo matadataFile = new FileInfo(GetMetadataFilePath(path));
             return matadataFile.Exists ? matadataFile : null;
         }
 
-        private string GetMetadataFilepath(string path)
+        private string GetMetadataFilePath(string path)
         {
             return Path.IsPathRooted(path) ?
                 Path.Combine(path, Metadata.Filename) :
                 Path.Combine(GetPagesDirectory().FullName, path, Metadata.Filename);
         }
 
-        private string GetPageFilepath(string path)
+        private string GetPageFilePath(string path)
         {
             return Path.IsPathRooted(path) ?
                 path :

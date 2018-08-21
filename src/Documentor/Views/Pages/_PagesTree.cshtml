@@ -5,7 +5,7 @@
     <ul>
         @foreach (NavItem navItem in Model)
         {
-            <li>
+            <li data-virtual-path="@navItem.VirtualPath">
                 @navItem.DisplayName
                 @await Html.PartialAsync("_PagesTree", navItem.Children)
             </li>

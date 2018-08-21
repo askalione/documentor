@@ -6,12 +6,14 @@
 
 <h1 class="page__title">@Title</h1>
 
-@using (Html.BeginForm("Index", "Robots", null, FormMethod.Post))
-{
-    @Html.ValidationSummary(true)
+
+<form asp-action="Index" method="post">
+    <div asp-validation-summary="ModelOnly"></div>
     <div class="form-group">
-        @Html.TextAreaFor(m => m.Content, new { @rows = 16, @class = "form-control" })
+        <label asp-for="Content" class="control-label"></label>
+        <textarea asp-for="Content" rows="15" class="form-control"></textarea>
         <small class="form-text text-muted">What is <a href="https://moz.com/learn/seo/robotstxt" target="_blank" rel="nofollow">robots.txt</a>?</small>
+        <span asp-validation-for="Content"></span>
     </div>
     <button type="submit" class="btn btn-success button"><i class="la la-save button__icon"></i>Save</button>
-}
+</form>

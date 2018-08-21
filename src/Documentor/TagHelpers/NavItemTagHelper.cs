@@ -29,7 +29,7 @@ namespace Documentor.TagHelpers
             var child = await output.GetChildContentAsync();
 
             string requestPath = ViewContext.HttpContext.Request.Path.ToString().Trim(Separator.Path);
-            string editPart = "Edit";
+            string editPart = "m/Edit";
             if (requestPath.StartsWith(editPart, StringComparison.OrdinalIgnoreCase))
                 requestPath = requestPath.Remove(0, editPart.Length).Trim(Separator.Path);
             int level = NavItem.VirtualPath.Split(Separator.Path).Length;

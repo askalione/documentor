@@ -1,14 +1,20 @@
 ﻿@model Page
 
 @{
-    Title = Model.Metadata.Title;
-    Description = Model.Metadata.Description;
+    Title = Model.Context.Metadata.Title;
+    Description = Model.Context.Metadata.Description;
 }
 
 @section PageActions {
-    <a href="/m/Edit/@Model.Path.Location.GetVirtualPath()" class="page__action la la-edit" title="Edit page"></a>
+    <a href="/m/Edit/@Model.Context.Path.Location.GetVirtualPath()" class="page__action la la-edit" title="Edit page"></a>
 }
 
 <div class="page-content">
-    @Html.Raw(Model.Content.Html)
+    @if (User.Identity.IsAuthenticated && String.IsNullOrWhiteSpace(Model.Data.Html))
+    {
+        <div class="alert alert-warning">
+            This page is empty. Please, <a href="/m/Edit/@Model.Context.Path.Location.GetVirtualPath()"><i class="la la-edit"></i> edit</a> page now!
+        </div>
+    }
+    @Html.Raw(Model.Data.Html)
 </div>

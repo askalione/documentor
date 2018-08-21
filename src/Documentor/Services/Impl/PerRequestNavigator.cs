@@ -38,7 +38,7 @@ namespace Documentor.Services.Impl
             _cacheManager = cacheManager;
             _pageManager = pageManager;
 
-            _directoryScanRegex = new Regex(@"^(0*)([1-9]+)\.(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            _directoryScanRegex = new Regex($@"^(0*)([1-9]+)\{Separator.Sequence}(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
         public async Task<Nav> GetNavAsync()
@@ -141,7 +141,7 @@ namespace Documentor.Services.Impl
             {
                 try
                 {
-                    metadataDisplayName = JObject.Parse(metadata)[nameof(PageMetadata.Title).ToLower()]?.ToString();
+                    metadataDisplayName = JObject.Parse(metadata).GetValue(nameof(PageMetadata.Title))?.ToString();
                 }
                 catch (Exception ex)
                 {

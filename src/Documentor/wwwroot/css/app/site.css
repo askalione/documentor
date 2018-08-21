@@ -513,3 +513,14 @@ a:focus, a:hover {
 .login__action-icon {
     margin-right: 5px;    
 }
+
+/* Form */
+
+label.required:after {
+    content: "*";
+    color: #dc3545; 
+}
+
+.validation-summary-errors > ul {
+    margin: 0;
+}

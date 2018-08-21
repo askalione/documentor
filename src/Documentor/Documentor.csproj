@@ -12,7 +12,7 @@
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <NeutralLanguage>en</NeutralLanguage>
-    <Description>Extremly light and simple flat file CMS on .NET for build software documentation</Description>
+    <Description>Extremly light and easy to use flat file CMS on .NET for build software documentation</Description>
     <Copyright>Copyright © 2018 Alexey Drapash</Copyright>
   </PropertyGroup>
 
@@ -45,6 +45,9 @@
     <Content Update="nlog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="Views\Pages\Modify.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -55,7 +58,8 @@
     <Content Remove="wwwroot\js\*" CopyToPublishDirectory="Never" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
     <Content Include="wwwroot\js\site.min.js" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
     <Content Include="wwwroot\js\editor.min.js" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
-    <Content Include="wwwroot\js\tree.min.js" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+    <Content Include="wwwroot\js\pages.min.js" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+    <Content Include="wwwroot\js\users.min.js" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
   </ItemGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

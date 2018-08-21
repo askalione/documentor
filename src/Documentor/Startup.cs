@@ -30,6 +30,7 @@ namespace Documentor
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
             Configuration = builder.Build();
+            Bootstrap.Configure();
         }
 
         public void ConfigureServices(IServiceCollection services)

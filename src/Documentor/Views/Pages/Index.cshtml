@@ -12,14 +12,9 @@
 <div class="tree">
     <div class="tree__actions">
         <div class="btn-group">
-            <button type="button" class="btn btn-primary">Create</button>
-            <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
-                <span class="sr-only">Toggle Dropdown</span>
-            </button>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" href="#">Edit</a>
-                <a class="dropdown-item" href="#">Delete</a>
-            </div>
+            <button type="button" class="btn btn-primary button" data-action="add" data-url="@Url.Action("Add")"><i class="la la-plus button__icon"></i>Add new</button>
+            <button type="button" class="btn btn-secondary button" disabled="disabled" data-action="modify" data-url="@Url.Action("Modify")"><i class="la la-gear button__icon"></i>Modify selected</button>
+            <button type="button" class="btn btn-secondary button" disabled="disabled" data-action="remove" data-url="@Url.Action("Remove")"><i class="la la-trash button__icon"></i>Remove selected</button>
         </div>
     </div>
     <div class="tree__items">
@@ -29,5 +24,5 @@
 
 
 @section Scripts {
-    <bundle name="~/js/tree.min.js"></bundle>
+    <bundle name="~/js/pages.min.js"></bundle>
 }

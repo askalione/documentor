@@ -2,12 +2,12 @@
 
 namespace Documentor.Models
 {
-    public sealed class PageContent
+    public sealed class PageData
     {
         public string Markdown { get; }
         public string Html { get; }
 
-        public PageContent(string markdown,
+        public PageData(string markdown,
             string html)
         {
             if (markdown == null)

@@ -1,7 +1,9 @@
 ﻿using Documentor.Constants;
+using Documentor.Infrastructure;
 using Documentor.Models;
 using Documentor.Utilities;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -45,10 +47,10 @@ namespace Documentor.Services.Impl
             if (pagePath == null)
                 return null;
 
-            PageContent pageContent = await GetPageContentAsync(pagePath);
+            PageData pageData = await GetPageDataAsync(pagePath);
             PageMetadata pageMetadata = await GetPageMetadataAsync(pagePath);
 
-            return new Page(pagePath, pageMetadata, pageContent);
+            return new Page(new PageContext(pagePath, pageMetadata), pageData);
         }
 
         public async Task<Page> EditPageAsync(PagePath pagePath, string markdown)
@@ -65,10 +67,100 @@ namespace Documentor.Services.Impl
 
             await _pageManager.SavePage(pageFileInfo.FullName, markdown);
 
-            PageContent pageContent = await GetPageContentAsync(pagePath);
+            PageData pageData = await GetPageDataAsync(pagePath);
             PageMetadata pageMetadata = await GetPageMetadataAsync(pagePath);
 
-            return new Page(pagePath, pageMetadata, pageContent);
+            return new Page(new PageContext(pagePath, pageMetadata), pageData);
+        }
+
+        public async Task AddPageAsync(PageAddCommand command)
+        {
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+
+            string parentPath = _pageManager.GetPagesDirectory().FullName;
+            if (!String.IsNullOrWhiteSpace(command.ParentVirtualPath))
+            {
+                Location parentLocation = GetLocation(command.ParentVirtualPath);
+                if (parentLocation == null)
+                    throw new AppException("Parent page not found");
+                parentPath = Path.Combine(parentPath, parentLocation.GetDirectoryPath());
+            }
+
+            string[] siblingDirectoriesPath = Directory.GetDirectories(parentPath);
+            if (siblingDirectoriesPath.Length > 0)
+            {
+                Regex regex = new Regex($@"^(0*)([1-9]+)\{Separator.Sequence}{command.VirtualName}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                string existsDirectoryPath = siblingDirectoriesPath
+                    .FirstOrDefault(x => regex.IsMatch(new DirectoryInfo(x).Name));
+                if (!String.IsNullOrWhiteSpace(existsDirectoryPath))
+                    throw new AppException($"Virtual name {command.VirtualName} already exists");
+            }
+
+            int sequenceNumber = 0;
+            string lastSiblingDirectoryPath = siblingDirectoriesPath.OrderBy(x => x).LastOrDefault();
+            if (!String.IsNullOrWhiteSpace(lastSiblingDirectoryPath))
+                Int32.TryParse(new DirectoryInfo(lastSiblingDirectoryPath).Name.Split(Separator.Sequence)[0], out sequenceNumber);
+            sequenceNumber++;
+            string virtualName = (sequenceNumber < 10 ? "0" : "") + sequenceNumber.ToString() + Separator.Sequence + command.VirtualName;
+            DirectoryInfo pageDirectoryInfo = Directory.CreateDirectory(Path.Combine(parentPath, virtualName));
+            await _pageManager.SavePage(Path.Combine(pageDirectoryInfo.FullName, Markdown.Filename), "");
+            await _pageManager.SaveMetadataAsync(pageDirectoryInfo.FullName, new PageMetadata
+            {
+                Title = command.Title,
+                Description = command.Description
+            });
+        }
+
+        public async Task<PageContext> GetPageContextAsync(string virtualPath)
+        {
+            PagePath pagePath = GetPagePath(virtualPath);
+            if (pagePath == null)
+                throw new AppException("Page not found");
+            PageMetadata pageMetadata = await GetPageMetadataAsync(pagePath);
+            return new PageContext(pagePath, pageMetadata);
+        }
+
+        public async Task ModifyPageAsync(PageModifyCommand command)
+        {
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+
+            PagePath pagePath = GetPagePath(command.VirtualPath);
+            if (pagePath == null)
+                throw new AppException("Page not found");
+
+            string pageDirectoryPath = pagePath.Location.GetDirectoryPath();
+
+            PageMetadata pageMetadata = await GetPageMetadataAsync(pagePath);
+            pageMetadata.Title = command.Title;
+            pageMetadata.Description = command.Description;
+            await _pageManager.SaveMetadataAsync(pageDirectoryPath, pageMetadata);
+
+            if (!command.VirtualName.Equals(pagePath.Location.GetDestinationFolder().VirtualName))
+            {
+                string pagesDirectoryPath = _pageManager.GetPagesDirectory().FullName;
+                string oldPageDirectoryName = pagePath.Location.GetDestinationFolder().DirectoryName;
+                string newPageDirectoryPath = pageDirectoryPath.Remove(pageDirectoryPath.LastIndexOf(Separator.Path) + 1) +
+                    oldPageDirectoryName.Split(Separator.Sequence)[0] +
+                    Separator.Sequence +
+                    command.VirtualName;
+                Directory.Move(Path.Combine(pagesDirectoryPath, pageDirectoryPath), Path.Combine(pagesDirectoryPath, newPageDirectoryPath));
+            }
+            _cacheManager.ClearCache("*" + Cache.NavPostfix);
+        }
+
+        public void RemovePage(string virtualPath)
+        {
+            if (String.IsNullOrWhiteSpace(virtualPath))
+                throw new ArgumentNullException(nameof(virtualPath));
+
+            Location pageLocation = GetLocation(virtualPath);
+            if (pageLocation == null)
+                throw new AppException("Page not found");
+
+            Directory.Delete(Path.Combine(_pageManager.GetPagesDirectory().FullName, pageLocation.GetDirectoryPath()), true);
+            _cacheManager.ClearCache("*" + Cache.NavPostfix);
         }
 
         private PagePath GetPagePath(string virtualPath)
@@ -87,7 +179,7 @@ namespace Documentor.Services.Impl
             return null;
         }
 
-        private async Task<PageContent> GetPageContentAsync(PagePath pagePath)
+        private async Task<PageData> GetPageDataAsync(PagePath pagePath)
         {
             DirectoryInfo pagesDirectory = _pageManager.GetPagesDirectory();
             DirectoryInfo cacheDirectory = _cacheManager.GetCacheDirectory();
@@ -114,7 +206,7 @@ namespace Documentor.Services.Impl
                 await _cacheManager.SaveToCacheAsync(pageCachename, html);
             }
 
-            return new PageContent(markdown, html);
+            return new PageData(markdown, html);
         }
 
         private async Task<PageMetadata> GetPageMetadataAsync(PagePath pagePath)
@@ -126,7 +218,7 @@ namespace Documentor.Services.Impl
             {
                 try
                 {
-                    pageMetadata = JObject.Parse(metadata).ToObject<PageMetadata>();
+                    pageMetadata = JsonConvert.DeserializeObject<PageMetadata>(metadata);
                 }
                 catch (Exception ex)
                 {
@@ -151,7 +243,7 @@ namespace Documentor.Services.Impl
 
             while (!String.IsNullOrWhiteSpace(scanPath) && virtualNamesForScan.Count > 0)
             {
-                Regex regex = new Regex($@"^(0*)([1-9]+)\.{virtualNamesForScan.Pop()}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                Regex regex = new Regex($@"^(0*)([1-9]+)\{Separator.Sequence}{virtualNamesForScan.Pop()}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
                 string directoryPath = Directory.GetDirectories(scanPath)
                     .FirstOrDefault(x => regex.IsMatch(new DirectoryInfo(x).Name));
                 if (!String.IsNullOrEmpty(directoryPath))
@@ -173,7 +265,7 @@ namespace Documentor.Services.Impl
         private Location GetLocation(string virtualPath, int sequenceNumber)
         {
             Location location = GetLocation(virtualPath);
-            Regex regex = new Regex($@"^(0*){sequenceNumber}\.(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            Regex regex = new Regex($@"^(0*){sequenceNumber}\{Separator.Sequence}(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             string directoryPath = Directory.EnumerateDirectories(Path.Combine(_pageManager.GetPagesDirectory().FullName, location.GetDirectoryPath()))
                 .FirstOrDefault(x => regex.IsMatch(new DirectoryInfo(x).Name));

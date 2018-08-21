@@ -1,5 +1,6 @@
 ﻿using Documentor.Constants;
 using Documentor.Extensions;
+using Documentor.Infrastructure;
 using Documentor.Models;
 using Documentor.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace Documentor.Controllers
 {
+    [Authorize]
     public class PagesController : BaseController
     {
         private readonly IPager _pager;
@@ -30,7 +32,7 @@ namespace Documentor.Controllers
             _navigator = navigator;
         }
 
-        [Authorize]
+        
         [Breadcrumb("Pages")]
         public async Task<IActionResult> Index()
         {
@@ -38,7 +40,8 @@ namespace Documentor.Controllers
             return View(nav);
         }
 
-        [DefaultBreadcrumb("Home")]
+        [AllowAnonymous]
+        [DefaultBreadcrumb("Home")]        
         public async Task<IActionResult> Page(string virtualPath)
         {
             Page page = await _pager.GetPageAsync(virtualPath);
@@ -50,7 +53,6 @@ namespace Documentor.Controllers
             return View(page);
         }
 
-        [Authorize]
         public async Task<IActionResult> Edit(string virtualPath, string markdown)
         {
             Page page = await _pager.GetPageAsync(virtualPath);
@@ -59,7 +61,7 @@ namespace Documentor.Controllers
 
             if (Request.Method.Equals(HttpMethod.Post.Method))
             {
-                page = await _pager.EditPageAsync(page.Path, markdown);
+                page = await _pager.EditPageAsync(page.Context.Path, markdown);
                 return RedirectToAction(nameof(Page), new { virtualPath })
                     .Notify(NotificationType.Success, "Changes have been saved");
             }
@@ -113,6 +115,70 @@ namespace Documentor.Controllers
 
             if (breadcrumbNode != null)
                 ViewData["BreadcrumbNode"] = breadcrumbNode;
+        }
+
+        [HttpGet]
+        [Breadcrumb("Add page", FromAction = "Pages.Index")]
+        public IActionResult Add(string p)
+        {
+            PageAddCommand addCommand = new PageAddCommand
+            {
+                ParentVirtualPath = p
+            };
+            return View(addCommand);
+        }
+
+        [HttpPost]
+        [Breadcrumb("Add page", FromAction = "Pages.Index")]
+        [HandleException]
+        public async Task<IActionResult> Add(PageAddCommand addCommand)
+        {
+            if (ModelState.IsValid)
+            {
+               await _pager.AddPageAsync(addCommand);
+                return RedirectToAction(nameof(Page), new { virtualPath = addCommand.ParentVirtualPath + Separator.Path + addCommand.VirtualName })
+                    .Notify(NotificationType.Success, $"Page \"{addCommand.Title}\" has been added");
+            }
+            return View(addCommand);
+        }
+
+        [HttpGet]
+        [Breadcrumb("Modify page", FromAction = "Pages.Index")]
+        public async Task<IActionResult> Modify(string p)
+        {
+            PageContext pageContext = await _pager.GetPageContextAsync(p);
+            PageModifyCommand modifyCommand = new PageModifyCommand
+            {
+                VirtualPath = pageContext.Path.Location.GetVirtualPath(),
+                VirtualName = pageContext.Path.Location.GetDestinationFolder().VirtualName,
+                Title = pageContext.Metadata.Title,
+                Description = pageContext.Metadata.Description
+            };
+            return View(modifyCommand);
+        }
+
+        [HttpPost]
+        [Breadcrumb("Modify page", FromAction = "Pages.Index")]
+        [HandleException]
+        public async Task<IActionResult> Modify(PageModifyCommand modifyCommand)
+        {
+            if (ModelState.IsValid)
+            {
+                await _pager.ModifyPageAsync(modifyCommand);
+                string newVirtualPath = modifyCommand.VirtualPath.Remove(modifyCommand.VirtualPath.LastIndexOf(Separator.Path) + 1) + modifyCommand.VirtualName;
+                return RedirectToAction(nameof(Page), new { virtualPath = newVirtualPath })
+                    .Notify(NotificationType.Success, $"Page \"{modifyCommand.Title}\" has been modified");
+            }
+            return View(modifyCommand);
+        }
+
+        [HttpPost]
+        [HandleException]
+        public IActionResult Remove(string virtualPath)
+        {
+            _pager.RemovePage(virtualPath);
+            return Json(new JsonResponse(true))
+                .Notify(NotificationType.Success, $"Page with virtual path \"{virtualPath}\" has been deleted");
         }
     }
 }

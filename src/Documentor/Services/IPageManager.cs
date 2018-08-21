@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Documentor.Models;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Documentor.Services
@@ -9,6 +10,7 @@ namespace Documentor.Services
         Task<string> LoadPage(string path);
         Task SavePage(string path, string content);
         Task<string> LoadMetadataAsync(string path);        
+        Task SaveMetadataAsync(string path, PageMetadata metadata);
         FileInfo GetMetadataFile(string path);
     }
 }

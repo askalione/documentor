@@ -7,5 +7,9 @@ namespace Documentor.Services
     {
         Task<Page> GetPageAsync(string virtualPath);
         Task<Page> EditPageAsync(PagePath pagePath, string markdown);
+        Task AddPageAsync(PageAddCommand command);
+        Task<PageContext> GetPageContextAsync(string virtualPath);
+        Task ModifyPageAsync(PageModifyCommand command);
+        void RemovePage(string virtualPath);
     }
 }

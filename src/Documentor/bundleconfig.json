@@ -54,10 +54,10 @@
     "sourceMap": false
   },
   {
-    "outputFileName": "wwwroot/js/tree.min.js",
+    "outputFileName": "wwwroot/js/pages.min.js",
     "inputFiles": [
       "wwwroot/js/vendors/jstree.min.js",
-      "wwwroot/js/app/tree.js"
+      "wwwroot/js/app/pages.js"
     ],
     "minify": {
       "enabled": true,

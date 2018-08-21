@@ -4,24 +4,19 @@ namespace Documentor.Models
 {
     public sealed class Page
     {
-        public PagePath Path { get; }
-        public PageMetadata Metadata { get; }
-        public PageContent Content { get; }
+        public PageContext Context { get; }
+        public PageData Data { get; }
 
-        public Page(PagePath path,
-            PageMetadata metadata,
-            PageContent content)
+        public Page(PageContext context,
+            PageData data)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
-            if (metadata == null)
-                throw new ArgumentNullException(nameof(metadata));
-            if (content == null)
-                throw new ArgumentNullException(nameof(content));
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+            if (data == null)
+                throw new ArgumentNullException(nameof(data));
 
-            Path = path;
-            Metadata = metadata;
-            Content = content;
+            Context = context;
+            Data = data;
         }
     }
 }
