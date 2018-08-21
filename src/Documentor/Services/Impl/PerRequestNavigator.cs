@@ -1,15 +1,15 @@
-﻿using Documentor.Config;
-using Documentor.Constants;
+﻿using Documentor.Constants;
 using Documentor.Models;
 using Documentor.Utilities;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Documentor.Services.Impl
@@ -17,79 +17,137 @@ namespace Documentor.Services.Impl
     public class PerRequestNavigator : INavigator
     {
         private readonly ILogger<Pager> _logger;
-        private readonly IOConfig _config;
+        private readonly ICacheManager _cacheManager;
+        private readonly IPageManager _pageManager;
 
-        private Nav _nav;
+        private Nav _navPerRequest;
+        private readonly Regex _directoryScanRegex;
 
         public PerRequestNavigator(ILogger<Pager> logger,
-            IOptions<IOConfig> appConfigOptions)
+            ICacheManager cacheManager,
+            IPageManager pageManager)
         {
             if (logger == null)
-                throw new ArgumentNullException(nameof(logger));            
-            if (appConfigOptions == null)
-                throw new ArgumentNullException(nameof(appConfigOptions));
+                throw new ArgumentNullException(nameof(logger));
+            if (cacheManager == null)
+                throw new ArgumentNullException(nameof(cacheManager));
+            if (pageManager == null)
+                throw new ArgumentNullException(nameof(pageManager));
 
             _logger = logger;
-            _config = appConfigOptions.Value;
+            _cacheManager = cacheManager;
+            _pageManager = pageManager;
+
+            _directoryScanRegex = new Regex($@"^(0*)([1-9]+)\{Separator.Sequence}(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
         public async Task<Nav> GetNavAsync()
         {
-            if (_nav != null)
-                return _nav;
-
-            string pagesPath = _config.Pages.Path;
-            DirectoryInfo pagesDirectory = new DirectoryInfo(pagesPath);
-            DirectoryInfo cacheDirectory = new DirectoryInfo(_config.Cache.Path);            
-            string pagesPathHash = Hasher.GetMd5Hash(_config.Pages.Path);
-            string navCacheFilename = pagesPathHash + "_" + pagesDirectory.LastWriteTime.ToString("yyyyMMddHHmmss") + Cache.NavPostfix + Cache.FileExtension;
-            FileInfo navCacheFile = cacheDirectory.GetFiles(navCacheFilename, SearchOption.TopDirectoryOnly).FirstOrDefault();
+            if (_navPerRequest != null)
+                return _navPerRequest;
 
             Nav nav = null;
-            if (navCacheFile != null)
-            {
-                nav = JObject.Parse(await File.ReadAllTextAsync(navCacheFile.FullName)).ToObject<Nav>();
-            }            
-            if (nav == null)
-            {
-                cacheDirectory.GetFiles("*" + Cache.NavPostfix + Cache.FileExtension, SearchOption.TopDirectoryOnly)
-                    .ToList()
-                    .ForEach(f => f.Delete());
 
-                nav = new Nav(await GetNavItemsAsync(_config.Pages.Path, new List<Folder>()));
-                string navCacheFilePath = Path.Combine(_config.Cache.Path, navCacheFilename);
-                await File.WriteAllTextAsync(navCacheFilePath, JObject.FromObject(nav).ToString(Formatting.None)); 
+            string navHash = ComputeNavHash();
+            if (!String.IsNullOrWhiteSpace(navHash))
+            {
+                DirectoryInfo pagesDirectory = _pageManager.GetPagesDirectory();
+                DirectoryInfo cacheDirectory = _cacheManager.GetCacheDirectory();
+
+                _cacheManager.ClearCache();
+
+                string navCachename = navHash + Cache.NavPostfix;
+                string navCache = await _cacheManager.LoadFromCacheAsync(navCachename);
+
+                if (!String.IsNullOrEmpty(navCache))
+                {
+                    try
+                    {
+                        nav = JObject.Parse(navCache).ToObject<Nav>();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Invalid nav cache");
+                    }
+                }
+                if (nav == null)
+                {
+                    _cacheManager.ClearCache("*" + Cache.NavPostfix);
+
+                    nav = new Nav(await GetNavItemsAsync(pagesDirectory, new List<Folder>()));
+                    await _cacheManager.SaveToCacheAsync(navCachename, JObject.FromObject(nav).ToString(Formatting.None));
+                }
             }
 
-            return _nav = nav;
+            return _navPerRequest = nav;
         }
 
-        public async Task<List<NavItem>> GetNavItemsAsync(string scanPath, List<Folder> parentFolders)
+        public async Task<List<NavItem>> GetNavItemsAsync(DirectoryInfo scanDirectory, List<Folder> parentFolders)
         {
             List<NavItem> navItems = new List<NavItem>();
-            foreach (string directoryPath in Directory.GetDirectories(scanPath))
+
+            var test = scanDirectory
+                .GetDirectories()
+                .Where(x => _directoryScanRegex.IsMatch(x.Name));
+
+            foreach (DirectoryInfo directory in scanDirectory
+                .GetDirectories()
+                .Where(x => _directoryScanRegex.IsMatch(x.Name)))
             {
-                Folder folder = new Folder(new DirectoryInfo(directoryPath).Name);
+                Folder folder = new Folder(directory.Name);
                 List<Folder> navItemparentFolders = parentFolders.ToList();
                 navItemparentFolders.Add(folder);
 
-                NavItem navItem = new NavItem(await GetNavItemDisplayNameAsync(String.Join(Separator.Path, navItemparentFolders.Select(x => x.DirectoryName)), folder.VirtualName), 
-                    String.Join(Separator.Path, navItemparentFolders.Select(x => x.VirtualName)), 
-                    folder.SequenceNumber);
-                (await GetNavItemsAsync(directoryPath, navItemparentFolders))
-                    .ForEach(x => navItem.AddChild(x));
-                navItems.Add(navItem);
+                FileInfo pageFile = directory.GetFiles(Markdown.Filename, SearchOption.TopDirectoryOnly).FirstOrDefault();
+                if (pageFile != null)
+                {
+                    NavItem navItem = new NavItem(await GetNavItemDisplayNameAsync(String.Join(Separator.Path, navItemparentFolders.Select(x => x.DirectoryName)), folder.VirtualName),
+                        String.Join(Separator.Path, navItemparentFolders.Select(x => x.VirtualName)),
+                        folder.SequenceNumber);
+                    (await GetNavItemsAsync(directory, navItemparentFolders))
+                        .ForEach(x => navItem.AddChild(x));
+                    navItems.Add(navItem);
+                }
             }
             return navItems;
         }
 
+        private string ComputeNavHash()
+        {
+            StringBuilder sb = new StringBuilder();
+            _pageManager.GetPagesDirectory()
+                .GetDirectories("*", SearchOption.AllDirectories)
+                .Where(x => _directoryScanRegex.IsMatch(x.Name))
+                .OrderBy(x => x.FullName)
+                .ToList()
+                .ForEach(directory =>
+                {
+                    string hash = directory.LastWriteTime.ToString("yyyyMMddHHmmss");
+                    FileInfo metadataFile = _pageManager.GetMetadataFile(directory.FullName);
+                    if (metadataFile != null)
+                        hash += metadataFile.LastWriteTime.ToString("yyyyMMddHHmmss");
+                    sb.Append(hash);
+                });
+
+            return sb.Length > 0 ? Hasher.GetMd5Hash(sb.ToString()) : null;
+        }
+
         private async Task<string> GetNavItemDisplayNameAsync(string path, string virtualName)
         {
-            string metadataPath = Path.Combine(_config.Pages.Path, path, Metadata.Filename);
             string metadataDisplayName = String.Empty;
+            string metadata = await _pageManager.LoadMetadataAsync(path);
 
-            if (File.Exists(metadataPath))
-                metadataDisplayName = JObject.Parse(await File.ReadAllTextAsync(metadataPath))?[nameof(PageMetadata.Title).ToLower()]?.ToString();
+            if (!String.IsNullOrWhiteSpace(metadata))
+            {
+                try
+                {
+                    metadataDisplayName = JObject.Parse(metadata).GetValue(nameof(PageMetadata.Title))?.ToString();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Metadata invalid");
+                }
+            }
 
             return !String.IsNullOrWhiteSpace(metadataDisplayName) ? metadataDisplayName : virtualName;
         }

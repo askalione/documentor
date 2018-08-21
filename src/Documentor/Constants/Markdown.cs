@@ -2,6 +2,6 @@
 {
     public static class Markdown
     {
-        public const string Filename = "docs.md";
+        public static readonly string Filename = "docs.md";
     }
 }

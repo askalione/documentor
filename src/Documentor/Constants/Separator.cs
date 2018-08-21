@@ -2,7 +2,7 @@
 {
     public static class Separator
     {
-        public const char Path = '/';
-        public const char Sequence = '.';
+        public static readonly char Path = '/';
+        public static readonly char Sequence = '.';
     }
 }

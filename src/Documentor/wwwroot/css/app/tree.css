@@ -1,0 +1,21 @@
+/* Overrides */
+
+.jstree-default .jstree-clicked,
+.jstree-default .jstree-hovered {
+    color: #fff;
+    border-radius: 4px;
+}
+
+.jstree-default .jstree-clicked {
+    background-color: #0D7FFA;    
+}
+
+.jstree-default .jstree-hovered {
+    background-color: #5a6268; 
+}
+
+/* Pages tree */
+
+.tree__actions {
+    margin-bottom: 30px;
+}

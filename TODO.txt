@@ -1,0 +1,9 @@
+# Real world example for demo page
+
+# Page ordering
+
+-- Extensibility!
+
+# Search
+
+#? Themes

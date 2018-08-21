@@ -15,58 +15,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     @if (!String.IsNullOrEmpty(Description))
     {
-        <meta name="description" content="@Description">}
+        <meta name="description" content="@Description">
+    }
     <meta name="generator" content="Documentor @appVersion">
     <title>@Title</title>
     <link rel="shortcut icon" href="~/images/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet" />
-    <link href="~/css/site.min.css" rel="stylesheet" />
+    <bundle name="~/css/site.min.css"></bundle>
+    @await RenderSectionAsync("Styles", false)
 </head>
-<body>
-    <aside class="sidebar">
-        <header class="header">
-            <div class="header__inner">
-                <div class="logo">
-                    @{
-                        string brand = !String.IsNullOrWhiteSpace(appConfig.DisplayName) ? appConfig.DisplayName : "Documentor";
-                    }
-                    <a href="/" class="logo__link" title="@brand">
-                        <span class="logo__text">
-                            @brand
-                        </span>
-                    </a>
+<body class="@(Fullwidth ? "fullwidth": "")">
+    <div class="body-overlay"></div>
+    @if (!Fullwidth)
+    {
+        <aside class="sidebar @(User.Identity.IsAuthenticated ? "sidebar--logged-in" : "")">
+            <header class="header">
+                <div class="header__inner">
+                    <div class="logo">
+                        @{
+                            string brand = !String.IsNullOrWhiteSpace(appConfig.DisplayName) ? appConfig.DisplayName : "Documentor";
+                        }
+                        <a href="/" class="logo__link" title="@brand">
+                            <span class="logo__text">
+                                @brand
+                            </span>
+                        </a>
+                    </div>
                 </div>
+            </header>
+            @if (User.Identity.IsAuthenticated)
+            {
+                @await Html.PartialAsync("_Login")
+            }
+            <div class="scroller scrollbar-inner">
+                @await Component.InvokeAsync("Nav")
+                @if (!String.IsNullOrWhiteSpace(appConfig.Download.Url))
+                {
+                    <div class="share scroller__section">
+                        <div class="share__inner">
+                            <a href="@appConfig.Download.Url" class="btn btn-primary btn-block download__button">
+                                <span class="download__button-icon"><i class="la la-download"></i></span>
+                                <span class="download__button-text">Download@(!String.IsNullOrWhiteSpace(appConfig.Download.Version) ? " v" + appConfig.Download.Version : "")</span>
+                            </a>
+                        </div>
+                    </div>
+                }
+                <external-links></external-links>
             </div>
-        </header>
-        @await Component.InvokeAsync("Nav")
-        @if (!String.IsNullOrWhiteSpace(appConfig.Download.Url))
-        {
-            <div class="share scroller__section">
-                <a href="@appConfig.Download.Url" class="btn btn-primary btn-block download__button">
-                    <span class="download__button-icon"><i class="la la-download"></i></span>
-                    <span class="download__button-text">Download@(!String.IsNullOrWhiteSpace(appConfig.Download.Version) ? " v" + appConfig.Download.Version : "")</span>
-                </a>
-            </div>
-        }
-        @Html.ExternalLinks(appConfig.ExternalLinks)
-    </aside>
+        </aside>
+    }
     <div class="content">
 
-        <div class="content-overlay"></div>
+        @if (!Fullwidth)
+        {
+            <div class="content-overlay"></div>
 
-        <button class="btn btn-primary sidebar-toggle">
-            <i class="la la-navicon"></i>
-        </button>
+            <button class="btn btn-primary sidebar-toggle">
+                <i class="la la-navicon"></i>
+            </button>
+        }
 
         <main class="main">
+            <div class="page__header">
+                <div class="page__actions">
+                    @if (IsSectionDefined("PageActions"))
+                    {
+                        @RenderSection("PageActions", false)
+                    }
+                </div>
+                <breadcrumbs show="Breadcrumbs"></breadcrumbs>
+            </div>
             @RenderBody()
         </main>
 
         <footer class="footer">
-            Powered by <a href="https://github.com/askalione/documentor">Documentor</a> &copy; <a href="https://github.com/askalione">Alexey Drapash</a>, <a href="http://creacode.ru">Creacode</a>
+            Powered by <a href="https://github.com/askalione/documentor">Documentor</a>
         </footer>
 
     </div>
-    <script src="~/js/site.min.js"></script>
+    <bundle name="~/js/site.min.js"></bundle>
+    <notifications></notifications>
+    @await RenderSectionAsync("Scripts", false)
 </body>
 </html>

@@ -1,0 +1,5 @@
+/* Page editor */
+
+.page__editor .CodeMirror {
+	height: 440px;
+}

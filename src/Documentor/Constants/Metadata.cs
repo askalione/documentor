@@ -2,6 +2,6 @@
 {
     public static class Metadata
     {
-        public const string Filename = "metadata.json";
+        public static readonly string Filename = "metadata.json";
     }
 }

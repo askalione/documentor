@@ -1,0 +1,40 @@
+﻿@model PageModifyCommand
+
+@{
+    Title = "Modify page";
+}
+
+@section PageActions {
+    <a href="@Url.Action("Index")" class="page__action la la-undo" title="Back to pages"></a>
+}
+
+<h1 class="page__title">@Title</h1>
+
+<form asp-action="Modify" method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="form-group">
+        <label asp-for="VirtualPath" class="control-label"></label>
+        <input asp-for="VirtualPath" readonly class="form-control" />
+        <span asp-validation-for="VirtualPath"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="VirtualName" class="control-label required"></label>
+        <input asp-for="VirtualName" class="form-control" />
+        <small class="form-text text-muted">Virtual name must contains only digits, alphavetical characters and '-'.</small>
+        <span asp-validation-for="VirtualName"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Title" class="control-label required"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" rows="10" class="form-control"></textarea>
+        <span asp-validation-for="Description"></span>
+    </div>
+    <div class="btn-group">
+        <button type="submit" class="btn btn-success button"><i class="la la-save button__icon"></i>Save</button>
+        <a href="/m/Edit/@Model.VirtualPath" class="btn btn-secondary button"><i class="la la-edit button__icon"></i>Edit page data</a>
+    </div>
+</form>

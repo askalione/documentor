@@ -20,7 +20,7 @@ namespace Documentor.Models
         private List<NavItem> _children = new List<NavItem>();
         public IEnumerable<NavItem> Children => _children.OrderBy(x => x.SequenceNumber);
 
-        public NavItem(string displayName, 
+        public NavItem(string displayName,
             string virtualPath,
             int sequenceNumber)
         {
@@ -36,7 +36,7 @@ namespace Documentor.Models
 
         public void AddChild(NavItem child)
         {
-            _children.Add(child);           
+            _children.Add(child);
         }
     }
 }

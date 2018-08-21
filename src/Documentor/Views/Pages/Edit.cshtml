@@ -1,0 +1,30 @@
+﻿@model Page
+
+@{
+    Title = Model.Context.Metadata.Title;
+    Description = Model.Context.Metadata.Description;
+}
+
+@section Styles {
+    <bundle name="~/css/editor.min.css"></bundle>
+}
+
+@section PageActions {
+    <a href="/@Model.Context.Path.Location.GetVirtualPath()" class="page__action la la-undo" title="Back to view page"></a>
+}
+
+<div class="page-content">
+    <div class="page__editor">
+        <div class="page__editor-overlay"></div>
+        @using (Html.BeginForm("Edit", "Pages", FormMethod.Post, new { @class = "page__editor-form" }))
+        {
+
+            <textarea id="editor" name="markdown" style="display: none;">@Model.Data.Markdown</textarea>
+            @Html.Hidden("virtualPath", Model.Context.Path.Location.GetVirtualPath())
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <bundle name="~/js/editor.min.js"></bundle>
+}

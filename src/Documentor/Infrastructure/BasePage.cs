@@ -15,5 +15,17 @@ namespace Documentor.Infrastructure
             get { return ViewBag.PageDescription ?? ""; }
             set { ViewBag.PageDescription = value; }
         }
+
+        public bool Fullwidth
+        {
+            get { return ViewBag.Fullwidth ?? false; }
+            set { ViewBag.Fullwidth = value; }
+        }
+
+        public bool Breadcrumbs
+        {
+            get { return ViewBag.Breadcrumbs ?? true; }
+            set { ViewBag.Breadcrumbs = value; }
+        }
     }
 }

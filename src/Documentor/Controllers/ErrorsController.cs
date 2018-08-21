@@ -7,6 +7,7 @@ namespace Documentor.Controllers
     {
         public IActionResult Error()
         {
+            ViewBag.Fullwidth = true;
             return View("Error", new Error { Code = 500, Message = "Something goes wrong" });
         }
     }

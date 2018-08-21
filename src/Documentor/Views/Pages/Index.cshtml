@@ -1,0 +1,28 @@
+﻿@model Nav
+
+@{
+    Title = "Pages";
+}
+
+@section Styles {
+    <bundle name="~/css/tree.min.css"></bundle>
+}
+<h1 class="page__title">@Title</h1>
+
+<div class="tree">
+    <div class="tree__actions">
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary button" data-action="add" data-url="@Url.Action("Add")"><i class="la la-plus button__icon"></i>Add new</button>
+            <button type="button" class="btn btn-secondary button" disabled="disabled" data-action="modify" data-url="@Url.Action("Modify")"><i class="la la-gear button__icon"></i>Modify selected</button>
+            <button type="button" class="btn btn-secondary button" disabled="disabled" data-action="remove" data-url="@Url.Action("Remove")"><i class="la la-trash button__icon"></i>Remove selected</button>
+        </div>
+    </div>
+    <div class="tree__items">
+        @await Html.PartialAsync("_PagesTree", Model.Items)
+    </div>
+</div>
+
+
+@section Scripts {
+    <bundle name="~/js/pages.min.js"></bundle>
+}

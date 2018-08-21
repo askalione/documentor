@@ -9,12 +9,16 @@ namespace Documentor.Models
         private List<NavItem> _items = new List<NavItem>();
         public IEnumerable<NavItem> Items => _items.OrderBy(x => x.SequenceNumber);
 
-        public Nav(List<NavItem> items)
+        private Nav() { }
+
+        public Nav(List<NavItem> items) : this()
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             _items = items;
         }
+
+        public static Nav Empty => new Nav();
     }
 }
