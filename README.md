@@ -3,7 +3,7 @@
 
 # Documentor
 
-Documentor is extremly light and easy to use flat file CMS on .NET Core 2.1 for build software documentation. 
+Documentor is extremly light and easy to use flat file CMS on [.NET Core 2.1](https://www.microsoft.com/net/download/dotnet-core/2.1) for build software documentation. 
 
 Inspiration was found in flat file CMS on PHP - [Grav](https://github.com/getgrav/grav). Of course, Grav has more functions in comparison with Documentor, but at the same time Documentor holds all essential functions to quickly and simply create a platform for your software documentation using **.NET stack**.
 
@@ -11,33 +11,35 @@ It’s used [Markdown](https://www.markdownguide.org) for documentation descript
 
 ## References
 
-It’s used [Markdig](https://github.com/lunet-io/markdig) for conversion from Markdown to Html. But if you prefer another converter, you can easily use your own implementation of `IMarkdownConverter`.
-
-As logger it’s used  [NLog](https://github.com/NLog/NLog).
+- It’s used [Markdig](https://github.com/lunet-io/markdig) for conversion from Markdown to Html. But if you prefer another converter, you can easily use your own implementation of `IMarkdownConverter`;
+- For logging it’s used  [NLog](https://github.com/NLog/NLog);
+- For generating breadcrumbs it's used [SmartBreadcrumbs](https://github.com/zHaytam/SmartBreadcrumbs);
+- For building dump it's used [SharpZipLib](https://github.com/icsharpcode/SharpZipLib);
+- [Bootstrap 4](https://getbootstrap.com/docs/4.0), [CSS3](https://developer.mozilla.org/en/docs/Web/CSS/CSS3), [HTML5](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5), [BEM](http://getbem.com/) used to build frontend.
 
 It’s recommended to use [XDocumentor](https://github.com/askalione/xdocumentor) for automatic documents generation in Markdown format from Xml-comments in your  *.dll.
 
 ## Features
 
 - Authorization by external resources;
-- Documentation pages management, include wysiwyg editor for markdown;
+- Documentation pages management includes wysiwyg editor for markdown;
 - SEO management;
 - Export dump of documentation;
 
 ## How to use
 
-Download and open solution. Publish application to target site directory.
+Download last release and open solution. Publish application to target site directory.
 
 ### Authorization
 
-Documentor осуществляет авторизацию на основе OAuth 2.0. По умолчанию для подключения доступны следующие ресурсы:
+Documentor uses authorization on basis of [OAuth 2.0](https://oauth.net/2/) and available emails list. By default next resources are available:
 - Google;
 - GitHub;
 - Facebook;
 - Yandex;
 - Vkontakte.
 
-В файле `appsettings.json` в разделе `Authorization.Emails` необходимо указать emails, которые могут авторизоваться в системе. Для начала работы нужно добавить хотя бы один email. Открыть доступ другим пользователям далее можно будет через интерфейс системы. Авторизованные пользователи могут использовать все вышеперечисленные features. Если вы создаете структуру и текст документации вручную, то авторизация является optional.
+In file `appsettings.json` in `Authorization.Emails` section it's necessary to type emails, which can be authorized in application. It's necessary to type at least one email to start work. You can open access for other users via application interface. Authorized users can use all just listed features. If you create documentation structure and text by hand, authorization is optional.
 
 ### Pages
 
@@ -55,16 +57,16 @@ Directories must be sequence numbered, as in the example, for correct order disp
 Example fo `metadata.json`:
 ```json
 {
-	"title": "Start page",
-	"description": "Let's start this documentation"
+	"Title": "Start page",
+	"Description": "Let's start this documentation"
 }
 ```
 Fields description in `metadata.json` file:
 
 | Name | Description | 
 | --- | --- | 
-| title | Page title, which displays in nav and in title meta tag | 
-| description| Page description, which displays in description meta tag | 
+| Title | Page title, which displays in nav and in title meta tag | 
+| Description| Page description, which displays in description meta tag | 
 
 ### Configuration
 
