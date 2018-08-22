@@ -145,7 +145,9 @@ namespace Documentor.Services.Impl
                     oldPageDirectoryName.Split(Separator.Sequence)[0] +
                     Separator.Sequence +
                     command.VirtualName;
-                Directory.Move(Path.Combine(pagesDirectoryPath, pageDirectoryPath), Path.Combine(pagesDirectoryPath, newPageDirectoryPath));
+                string fakePageDirectoryPath = newPageDirectoryPath + "_";
+                Directory.Move(Path.Combine(pagesDirectoryPath, pageDirectoryPath), Path.Combine(pagesDirectoryPath, fakePageDirectoryPath));
+                Directory.Move(Path.Combine(pagesDirectoryPath, fakePageDirectoryPath), Path.Combine(pagesDirectoryPath, newPageDirectoryPath));
             }
             _cacheManager.ClearCache("*" + Cache.NavPostfix);
         }

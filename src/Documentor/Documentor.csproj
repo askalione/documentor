@@ -44,10 +44,7 @@
   <ItemGroup>
     <Content Update="nlog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Views\Pages\Modify.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
+    </Content>    
   </ItemGroup>
 
   <ItemGroup>
@@ -62,6 +59,10 @@
     <Content Include="wwwroot\js\users.min.js" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Content Remove="appsettings.Development.json" CopyToPublishDirectory="Never" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+  </ItemGroup>
+    
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\..\dist\$(Version)\</OutputPath>
   </PropertyGroup>

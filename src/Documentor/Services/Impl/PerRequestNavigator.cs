@@ -79,7 +79,7 @@ namespace Documentor.Services.Impl
                 }
             }
 
-            return _navPerRequest = nav;
+            return _navPerRequest = nav ?? Nav.Empty;
         }
 
         public async Task<List<NavItem>> GetNavItemsAsync(DirectoryInfo scanDirectory, List<Folder> parentFolders)

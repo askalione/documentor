@@ -56,7 +56,7 @@ namespace Documentor.Controllers
             }
 
             return Json(new JsonResponse(true))
-                .Notify(NotificationType.Success, $"{email} has been added");
+                .Notify(NotificationType.Success, $"{email} added");
         }
 
         [HttpPost]
@@ -67,7 +67,7 @@ namespace Documentor.Controllers
             {
                 _authorizationConfigModifier.Update(x => x.Emails = emails.ToArray());
                 return Json(new JsonResponse(true))
-                    .Notify(NotificationType.Success, $"{email} has been removed");
+                    .Notify(NotificationType.Success, $"{email} removed");
             }
             else
             {

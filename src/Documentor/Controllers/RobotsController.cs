@@ -46,7 +46,7 @@ namespace Documentor.Controllers
             {
                 await System.IO.File.WriteAllTextAsync(GetRobotsTxtFile().FullName, robotsEditCommand.Content, Encoding.UTF8);
                 return RedirectToAction(nameof(Index))
-                    .Notify(NotificationType.Success, "Changes in robots.txt has been saved");
+                    .Notify(NotificationType.Success, "Changes in robots.txt saved");
             }
             return View();
         }

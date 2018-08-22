@@ -34,7 +34,7 @@ namespace Documentor.Services.Impl
 
             DirectoryInfo pagesDirectory = new DirectoryInfo(Path.Combine(_hostingEnvironment.ContentRootPath, _pagesSettings.Path));
             if (!pagesDirectory.Exists)
-                throw new InvalidOperationException("Pages directory not found");
+                pagesDirectory.Create();
 
             return pagesDirectory;
         }

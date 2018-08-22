@@ -3,3 +3,13 @@
 .page__editor .CodeMirror {
 	height: 440px;
 }
+
+.editor-toolbar.fullscreen,
+.CodeMirror-fullscreen,
+.editor-preview-side {
+    z-index: 999;
+}
+
+.editor-toolbar {
+    background-color: #f7f7f7;
+}

@@ -1,5 +1,9 @@
 ﻿@using Documentor.Services
+@using Documentor.Config
+
 @inject ISignInManager SignInManager
+@inject Microsoft.Extensions.Options.IOptionsSnapshot<AuthorizationConfig> AuthConfigOptions
+@inject INavigator navigator
 
 @{
     Title = "Sign in";
@@ -26,23 +30,35 @@
             }
             else
             {
-                @using (Html.BeginForm("ExternalLogin", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+                @if (AuthConfigOptions.Value.Emails.Length > 0)
                 {
-                    <div class="buttons">
-                        @foreach (var provider in loginProviders)
-                        {
-                            <button type="submit" class="btn btn-primary btn-block button" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
-                                <span class="button__icon"><i class="la la-@provider.Name.ToLower()"></i></span>
-                                <span class="button__text">@provider.Name</span>
-                            </button>
-                        }
+                    using (Html.BeginForm("ExternalLogin", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+                    {
+                        <div class="buttons">
+                            @foreach (var provider in loginProviders)
+                            {
+                                <button type="submit" class="btn btn-primary btn-block button" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                    <span class="button__icon"><i class="la la-@provider.Name.ToLower()"></i></span>
+                                    <span class="button__text">@provider.Name</span>
+                                </button>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        There are no authorized account emails. Please configure authorization.
                     </div>
                 }
             }
 
-            <p class="text-center" style="margin-top: 20px;">
-                <a href="/"><i class="la la-long-arrow-left" style="margin-right: 5px;"></i>Pages</a>
-            </p>
+            if ((await navigator.GetNavAsync()).Items.Count() > 0)
+            {
+                <p class="text-center" style="margin-top: 20px;">
+                    <a href="/"><i class="la la-long-arrow-left" style="margin-right: 5px;"></i>Pages</a>
+                </p>
+            }
         }
     </div>
 </div>

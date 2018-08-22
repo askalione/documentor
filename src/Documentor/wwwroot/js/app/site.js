@@ -6,6 +6,7 @@
 
             $(document).ready(function () {
                 $('.scroller').scrollbar();
+                $('body').addClass('animation');
 
                 that._bindEvents();
             });
