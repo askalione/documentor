@@ -10,7 +10,7 @@
 }
 
 <div class="page-content">
-    @if (User.Identity.IsAuthenticated && String.IsNullOrWhiteSpace(Model.Data.Html))
+    @if (User.Identity.IsAuthenticated && string.IsNullOrWhiteSpace(Model.Data.Html))
     {
         <div class="alert alert-warning">
             This page is empty. Please, <a href="/m/Edit/@Model.Context.Path.Location.GetVirtualPath()"><i class="la la-edit"></i> edit</a> page now!

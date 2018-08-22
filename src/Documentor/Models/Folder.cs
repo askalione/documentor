@@ -11,7 +11,7 @@ namespace Documentor.Models
 
         public Folder(string directoryName)
         {
-            if (String.IsNullOrWhiteSpace(directoryName))
+            if (string.IsNullOrWhiteSpace(directoryName))
                 throw new ArgumentNullException(nameof(directoryName));
 
             DirectoryName = directoryName.Trim();

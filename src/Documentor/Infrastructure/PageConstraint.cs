@@ -15,8 +15,8 @@ namespace Documentor.Infrastructure
             RouteValueDictionary values, 
             RouteDirection routeDirection)
         {
-            var test = !(String.Equals(values["controller"].ToString(), "Pages", StringComparison.OrdinalIgnoreCase) &&
-                String.Equals(values["action"].ToString(), "Page", StringComparison.OrdinalIgnoreCase));
+            var test = !(string.Equals(values["controller"].ToString(), "Pages", StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(values["action"].ToString(), "Page", StringComparison.OrdinalIgnoreCase));
 
             return test;
         }

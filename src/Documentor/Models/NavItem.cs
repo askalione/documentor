@@ -24,9 +24,9 @@ namespace Documentor.Models
             string virtualPath,
             int sequenceNumber)
         {
-            if (String.IsNullOrWhiteSpace(displayName))
+            if (string.IsNullOrWhiteSpace(displayName))
                 throw new ArgumentNullException(nameof(displayName));
-            if (String.IsNullOrWhiteSpace(virtualPath))
+            if (string.IsNullOrWhiteSpace(virtualPath))
                 throw new ArgumentNullException(nameof(virtualPath));
 
             DisplayName = displayName.Trim();

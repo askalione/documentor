@@ -38,7 +38,7 @@ namespace Documentor.Services.Impl
 
         public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemesAsync()
         {
-            return (await _schemes.GetAllSchemesAsync()).Where(s => !String.IsNullOrEmpty(s.DisplayName));
+            return (await _schemes.GetAllSchemesAsync()).Where(s => !string.IsNullOrEmpty(s.DisplayName));
         }
 
         public AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string redirectUrl)
@@ -55,7 +55,7 @@ namespace Documentor.Services.Impl
                 return SignInResult.Failure;
 
             string email = externalClaimsPrincipal.FindFirstValue(ClaimTypes.Email);
-            if (String.IsNullOrWhiteSpace(email) || !_authorizationConfig.Emails.Contains(email))
+            if (string.IsNullOrWhiteSpace(email) || !_authorizationConfig.Emails.Contains(email))
                 return SignInResult.AccessDenied;
 
             ClaimsPrincipal userPrincipal = CreateClaimsPrincipal(externalClaimsPrincipal);
@@ -99,7 +99,7 @@ namespace Documentor.Services.Impl
             claimsIdentity.AddClaim(new Claim(ClaimTypes.Email, externalClaimsPrincipal.FindFirstValue(ClaimTypes.Email)));
 
             string givenName = externalClaimsPrincipal.FindFirstValue(ClaimTypes.GivenName);
-            if (!String.IsNullOrEmpty(givenName))
+            if (!string.IsNullOrEmpty(givenName))
                 claimsIdentity.AddClaim(new Claim(ClaimTypes.GivenName, givenName));
 
             return new ClaimsPrincipal(claimsIdentity);

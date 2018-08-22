@@ -41,7 +41,7 @@ namespace Documentor.TagHelpers
 
             if (isPage)
             {
-                if (!String.IsNullOrWhiteSpace(requestPath))
+                if (!string.IsNullOrWhiteSpace(requestPath))
                 {
                     expanded = requestPath.StartsWith(NavItem.VirtualPath, StringComparison.OrdinalIgnoreCase);
                     active = requestPath.Equals(NavItem.VirtualPath, StringComparison.OrdinalIgnoreCase);

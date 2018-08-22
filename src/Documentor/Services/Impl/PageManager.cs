@@ -29,7 +29,7 @@ namespace Documentor.Services.Impl
 
         public DirectoryInfo GetPagesDirectory()
         {
-            if (String.IsNullOrWhiteSpace(_pagesSettings.Path))
+            if (string.IsNullOrWhiteSpace(_pagesSettings.Path))
                 throw new InvalidOperationException("Pages directory undefined");
 
             DirectoryInfo pagesDirectory = new DirectoryInfo(Path.Combine(_hostingEnvironment.ContentRootPath, _pagesSettings.Path));
@@ -51,7 +51,7 @@ namespace Documentor.Services.Impl
 
         public async Task<string> LoadMetadataAsync(string path)
         {
-            if (String.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(path))
                 throw new ArgumentNullException(nameof(path));
 
             FileInfo matadataFile = GetMetadataFile(path);
@@ -69,7 +69,7 @@ namespace Documentor.Services.Impl
 
         public FileInfo GetMetadataFile(string path)
         {
-            if (String.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(path))
                 throw new ArgumentNullException(nameof(path));
 
             FileInfo matadataFile = new FileInfo(GetMetadataFilePath(path));

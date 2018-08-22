@@ -28,7 +28,7 @@ namespace Documentor.Services.Impl
 
         public DirectoryInfo GetCacheDirectory()
         {
-            if (String.IsNullOrWhiteSpace(_cacheSettings.Path))
+            if (string.IsNullOrWhiteSpace(_cacheSettings.Path))
                 throw new InvalidOperationException("Cache directory undefined");
 
             DirectoryInfo cacheDirectory = new DirectoryInfo(Path.Combine(_hostingEnvironment.ContentRootPath, _cacheSettings.Path));
@@ -40,7 +40,7 @@ namespace Documentor.Services.Impl
 
         public async Task SaveToCacheAsync(string cachename, string cache)
         {
-            if (String.IsNullOrWhiteSpace(cachename))
+            if (string.IsNullOrWhiteSpace(cachename))
                 throw new ArgumentNullException(nameof(cachename));
 
             DirectoryInfo cacheDirectory = GetCacheDirectory();
@@ -49,7 +49,7 @@ namespace Documentor.Services.Impl
 
         public async Task<string> LoadFromCacheAsync(string cachename)
         {
-            if (String.IsNullOrWhiteSpace(cachename))
+            if (string.IsNullOrWhiteSpace(cachename))
                 throw new ArgumentNullException(nameof(cachename));
 
             FileInfo cacheFile = GetCacheFile(cachename);
@@ -70,7 +70,7 @@ namespace Documentor.Services.Impl
 
         public void ClearCache(string pattern)
         {
-            if (String.IsNullOrWhiteSpace(pattern))
+            if (string.IsNullOrWhiteSpace(pattern))
                 ClearCache();
 
             DirectoryInfo cacheDirectory = GetCacheDirectory();

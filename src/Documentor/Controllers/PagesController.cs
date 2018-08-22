@@ -46,7 +46,7 @@ namespace Documentor.Controllers
         {
             Page page = await _pager.GetPageAsync(virtualPath);
             if (page == null)
-                if (String.IsNullOrWhiteSpace(virtualPath) && !User.Identity.IsAuthenticated)
+                if (string.IsNullOrWhiteSpace(virtualPath) && !User.Identity.IsAuthenticated)
                     return RedirectToAction("Login", "Account");
                 else
                     return PageNotFound();
@@ -82,13 +82,13 @@ namespace Documentor.Controllers
             string requestPath = virtualPath?.Trim(Separator.Path);
 
             BreadcrumbNode breadcrumbNode = null;
-            if (!String.IsNullOrWhiteSpace(requestPath))
+            if (!string.IsNullOrWhiteSpace(requestPath))
             {
                 Stack<string> virtualNamesForScan = new Stack<string>(requestPath.Split(Separator.Path).Reverse());
 
                 BreadcrumbNode ScanNavItem(string virtualNameForScan, IEnumerable<NavItem> navItems, BreadcrumbNode parent = null)
                 {
-                    if (!String.IsNullOrWhiteSpace(virtualNameForScan) &&
+                    if (!string.IsNullOrWhiteSpace(virtualNameForScan) &&
                         navItems.Count() > 0)
                     {
                         NavItem navItem = navItems.FirstOrDefault(x => x.VirtualPath.Equals(virtualNameForScan, StringComparison.OrdinalIgnoreCase));

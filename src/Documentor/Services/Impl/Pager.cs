@@ -79,7 +79,7 @@ namespace Documentor.Services.Impl
                 throw new ArgumentNullException(nameof(command));
 
             string parentPath = _pageManager.GetPagesDirectory().FullName;
-            if (!String.IsNullOrWhiteSpace(command.ParentVirtualPath))
+            if (!string.IsNullOrWhiteSpace(command.ParentVirtualPath))
             {
                 Location parentLocation = GetLocation(command.ParentVirtualPath);
                 if (parentLocation == null)
@@ -93,13 +93,13 @@ namespace Documentor.Services.Impl
                 Regex regex = new Regex($@"^(0*)([1-9]+)\{Separator.Sequence}{command.VirtualName}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
                 string existsDirectoryPath = siblingDirectoriesPath
                     .FirstOrDefault(x => regex.IsMatch(new DirectoryInfo(x).Name));
-                if (!String.IsNullOrWhiteSpace(existsDirectoryPath))
+                if (!string.IsNullOrWhiteSpace(existsDirectoryPath))
                     throw new AppException($"Virtual name {command.VirtualName} already exists");
             }
 
             int sequenceNumber = 0;
             string lastSiblingDirectoryPath = siblingDirectoriesPath.OrderBy(x => x).LastOrDefault();
-            if (!String.IsNullOrWhiteSpace(lastSiblingDirectoryPath))
+            if (!string.IsNullOrWhiteSpace(lastSiblingDirectoryPath))
                 Int32.TryParse(new DirectoryInfo(lastSiblingDirectoryPath).Name.Split(Separator.Sequence)[0], out sequenceNumber);
             sequenceNumber++;
             string virtualName = (sequenceNumber < 10 ? "0" : "") + sequenceNumber.ToString() + Separator.Sequence + command.VirtualName;
@@ -154,7 +154,7 @@ namespace Documentor.Services.Impl
 
         public void RemovePage(string virtualPath)
         {
-            if (String.IsNullOrWhiteSpace(virtualPath))
+            if (string.IsNullOrWhiteSpace(virtualPath))
                 throw new ArgumentNullException(nameof(virtualPath));
 
             Location pageLocation = GetLocation(virtualPath);
@@ -167,14 +167,14 @@ namespace Documentor.Services.Impl
 
         private PagePath GetPagePath(string virtualPath)
         {
-            Location location = !String.IsNullOrWhiteSpace(virtualPath) ?
+            Location location = !string.IsNullOrWhiteSpace(virtualPath) ?
                 GetLocation(virtualPath) :
                 GetLocation("", 1);
 
             if (!location.Undefined)
             {
                 string filePath = Directory.GetFiles(Path.Combine(_pageManager.GetPagesDirectory().FullName, location.GetDirectoryPath()), Markdown.Filename).FirstOrDefault();
-                if (!String.IsNullOrEmpty(filePath))
+                if (!string.IsNullOrEmpty(filePath))
                     return new PagePath(location, new FileInfo(filePath).Name);
             }
 
@@ -196,7 +196,7 @@ namespace Documentor.Services.Impl
 
             string markdown = await _pageManager.LoadPage(pageFileInfo.FullName);
             string html;
-            if (!String.IsNullOrEmpty(pageCache))
+            if (!string.IsNullOrEmpty(pageCache))
             {
                 html = pageCache;
             }
@@ -216,7 +216,7 @@ namespace Documentor.Services.Impl
             string metadata = await _pageManager.LoadMetadataAsync(pagePath.Location.GetDirectoryPath());
             PageMetadata pageMetadata = new PageMetadata();
 
-            if (!String.IsNullOrWhiteSpace(metadata))
+            if (!string.IsNullOrWhiteSpace(metadata))
             {
                 try
                 {
@@ -228,7 +228,7 @@ namespace Documentor.Services.Impl
                 }
             }
 
-            if (String.IsNullOrWhiteSpace(pageMetadata.Title))
+            if (string.IsNullOrWhiteSpace(pageMetadata.Title))
                 pageMetadata.Title = pagePath.Location.GetDestinationFolder().VirtualName;
 
             return pageMetadata;
@@ -236,19 +236,19 @@ namespace Documentor.Services.Impl
 
         private Location GetLocation(string virtualPath)
         {
-            if (String.IsNullOrWhiteSpace(virtualPath))
+            if (string.IsNullOrWhiteSpace(virtualPath))
                 return Location.Empty;
 
             Stack<string> virtualNamesForScan = new Stack<string>(virtualPath.Split(Separator.Path).Reverse());
             List<Folder> folders = new List<Folder>();
             string scanPath = _pageManager.GetPagesDirectory().FullName;
 
-            while (!String.IsNullOrWhiteSpace(scanPath) && virtualNamesForScan.Count > 0)
+            while (!string.IsNullOrWhiteSpace(scanPath) && virtualNamesForScan.Count > 0)
             {
                 Regex regex = new Regex($@"^(0*)([1-9]+)\{Separator.Sequence}{virtualNamesForScan.Pop()}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
                 string directoryPath = Directory.GetDirectories(scanPath)
                     .FirstOrDefault(x => regex.IsMatch(new DirectoryInfo(x).Name));
-                if (!String.IsNullOrEmpty(directoryPath))
+                if (!string.IsNullOrEmpty(directoryPath))
                 {
                     string directoryName = new DirectoryInfo(directoryPath).Name;
                     folders.Add(new Folder(directoryName));
@@ -272,7 +272,7 @@ namespace Documentor.Services.Impl
             string directoryPath = Directory.EnumerateDirectories(Path.Combine(_pageManager.GetPagesDirectory().FullName, location.GetDirectoryPath()))
                 .FirstOrDefault(x => regex.IsMatch(new DirectoryInfo(x).Name));
 
-            if (!String.IsNullOrEmpty(directoryPath))
+            if (!string.IsNullOrEmpty(directoryPath))
             {
                 List<Folder> folders = location.Folders.ToList();
                 folders.Add(new Folder(new DirectoryInfo(directoryPath).Name));

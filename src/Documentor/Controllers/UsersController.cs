@@ -41,7 +41,7 @@ namespace Documentor.Controllers
         [HttpPost]
         public IActionResult Add(string email)
         {
-            if (String.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(email))
                 return Json(new JsonResponse(false, "Email required"));
             if (!IsValidEmail(email))
                 return Json(new JsonResponse(false, "Email not valid"));

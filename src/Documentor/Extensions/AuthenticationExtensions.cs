@@ -103,8 +103,8 @@ namespace Microsoft.Extensions.DependencyInjection
             string clienId = configuration[$"Authentication:{configurationSectionName}:ClientId"];
             string clientSecret = configuration[$"Authentication:{configurationSectionName}:ClientSecret"];
 
-            if (!String.IsNullOrWhiteSpace(clienId) &&
-                !String.IsNullOrWhiteSpace(clientSecret))
+            if (!string.IsNullOrWhiteSpace(clienId) &&
+                !string.IsNullOrWhiteSpace(clientSecret))
                 registration(clienId, clientSecret);
         }
     }

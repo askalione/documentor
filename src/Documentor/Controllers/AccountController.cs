@@ -55,7 +55,7 @@ namespace Documentor.Controllers
         [HttpGet]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
-            if (!String.IsNullOrWhiteSpace(remoteError))
+            if (!string.IsNullOrWhiteSpace(remoteError))
                 return RedirectToAction(nameof(Login));
 
             Services.SignInResult signInResult = await _signInManager.TrySignInAsync(true);
@@ -65,7 +65,7 @@ namespace Documentor.Controllers
             switch (signInResult)
             {
                 case Services.SignInResult.Successfully:
-                    if (!String.IsNullOrWhiteSpace(returnUrl))
+                    if (!string.IsNullOrWhiteSpace(returnUrl))
                         return RedirectToLocal(returnUrl);
                     return RedirectToAction("Page", "Pages");
                 case Services.SignInResult.Failure:
