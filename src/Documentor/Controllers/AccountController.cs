@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Documentor.Extensions;
 using Documentor.Models;
 using Documentor.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -16,9 +17,6 @@ namespace Documentor.Controllers
     {
         private readonly ISignInManager _signInManager;
         
-        [TempData]
-        public string ErrorMessage { get; set; }
-
         public AccountController(ISignInManager signInManager)
         {
             if (signInManager == null)
@@ -57,26 +55,28 @@ namespace Documentor.Controllers
         [HttpGet]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
-            if (!String.IsNullOrWhiteSpace(remoteError))
+            if (!string.IsNullOrWhiteSpace(remoteError))
                 return RedirectToAction(nameof(Login));
 
-            Services.SignInResult result = await _signInManager.TrySignInAsync(true);
+            Services.SignInResult signInResult = await _signInManager.TrySignInAsync(true);
 
-            switch(result)
+            IActionResult result = RedirectToAction(nameof(Login));
+
+            switch (signInResult)
             {
                 case Services.SignInResult.Successfully:
-                    if (!String.IsNullOrWhiteSpace(returnUrl))
+                    if (!string.IsNullOrWhiteSpace(returnUrl))
                         return RedirectToLocal(returnUrl);
                     return RedirectToAction("Page", "Pages");
                 case Services.SignInResult.Failure:
-                    ErrorMessage = "Login have been failed";
+                    result = result.Notify(NotificationType.Error, "Login failed");
                     break;
                 case Services.SignInResult.AccessDenied:
-                    ErrorMessage = "Access denied";
+                    result = result.Notify(NotificationType.Error, "Access denied");
                     break;
             }
-            
-            return RedirectToAction(nameof(Login));
+
+            return result;
         }
 
         private IActionResult RedirectToLocal(string returnUrl)

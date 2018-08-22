@@ -46,7 +46,10 @@ namespace Documentor.Controllers
         {
             Page page = await _pager.GetPageAsync(virtualPath);
             if (page == null)
-                return PageNotFound();
+                if (string.IsNullOrWhiteSpace(virtualPath) && !User.Identity.IsAuthenticated)
+                    return RedirectToAction("Login", "Account");
+                else
+                    return PageNotFound();
 
             BuildBreadcrumbs(virtualPath, await _navigator.GetNavAsync());
             ViewBag.IsPage = true;
@@ -63,7 +66,7 @@ namespace Documentor.Controllers
             {
                 page = await _pager.EditPageAsync(page.Context.Path, markdown);
                 return RedirectToAction(nameof(Page), new { virtualPath })
-                    .Notify(NotificationType.Success, "Changes have been saved");
+                    .Notify(NotificationType.Success, "Changes saved");
             }
 
             BuildBreadcrumbs(virtualPath, await _navigator.GetNavAsync());
@@ -79,13 +82,13 @@ namespace Documentor.Controllers
             string requestPath = virtualPath?.Trim(Separator.Path);
 
             BreadcrumbNode breadcrumbNode = null;
-            if (!String.IsNullOrWhiteSpace(requestPath))
+            if (!string.IsNullOrWhiteSpace(requestPath))
             {
                 Stack<string> virtualNamesForScan = new Stack<string>(requestPath.Split(Separator.Path).Reverse());
 
                 BreadcrumbNode ScanNavItem(string virtualNameForScan, IEnumerable<NavItem> navItems, BreadcrumbNode parent = null)
                 {
-                    if (!String.IsNullOrWhiteSpace(virtualNameForScan) &&
+                    if (!string.IsNullOrWhiteSpace(virtualNameForScan) &&
                         navItems.Count() > 0)
                     {
                         NavItem navItem = navItems.FirstOrDefault(x => x.VirtualPath.Equals(virtualNameForScan, StringComparison.OrdinalIgnoreCase));
@@ -137,7 +140,7 @@ namespace Documentor.Controllers
             {
                await _pager.AddPageAsync(addCommand);
                 return RedirectToAction(nameof(Page), new { virtualPath = addCommand.ParentVirtualPath + Separator.Path + addCommand.VirtualName })
-                    .Notify(NotificationType.Success, $"Page \"{addCommand.Title}\" has been added");
+                    .Notify(NotificationType.Success, $"Page \"{addCommand.Title}\" added");
             }
             return View(addCommand);
         }
@@ -167,7 +170,7 @@ namespace Documentor.Controllers
                 await _pager.ModifyPageAsync(modifyCommand);
                 string newVirtualPath = modifyCommand.VirtualPath.Remove(modifyCommand.VirtualPath.LastIndexOf(Separator.Path) + 1) + modifyCommand.VirtualName;
                 return RedirectToAction(nameof(Page), new { virtualPath = newVirtualPath })
-                    .Notify(NotificationType.Success, $"Page \"{modifyCommand.Title}\" has been modified");
+                    .Notify(NotificationType.Success, $"Page \"{modifyCommand.Title}\" modified");
             }
             return View(modifyCommand);
         }
@@ -178,7 +181,7 @@ namespace Documentor.Controllers
         {
             _pager.RemovePage(virtualPath);
             return Json(new JsonResponse(true))
-                .Notify(NotificationType.Success, $"Page with virtual path \"{virtualPath}\" has been deleted");
+                .Notify(NotificationType.Success, $"Page with virtual path \"{virtualPath}\" deleted");
         }
     }
 }

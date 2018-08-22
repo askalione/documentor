@@ -2,6 +2,14 @@
 
 # Page ordering
 
+# Install by steps
+
+# Multilanguage
+
+-- Development
+
+# IPager and IPageManager what responsibility?!
+
 -- Extensibility!
 
 # Search

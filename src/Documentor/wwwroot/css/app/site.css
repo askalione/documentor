@@ -12,7 +12,7 @@ body {
     font-size: 1.05rem;
     line-height: 1.7;
     color: #606c76;
-    background-image: url(../images/bg-main.svg);
+    background-image: url(../../images/bg-main.svg);
     background-repeat: repeat-x;
     background-attachment: fixed;
 }
@@ -53,10 +53,7 @@ a:focus, a:hover {
     width: 300px;
     bottom: 0;
     left: 0;
-    padding-bottom: 90px;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    transition: all 0.5s ease;
+    padding-bottom: 90px;    
     z-index: 999;
 }
 
@@ -294,10 +291,7 @@ a:focus, a:hover {
     position: relative;
     overflow-x: hidden;
     overflow-y: hidden;
-    padding: 30px 40px 80px 40px;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    transition: all 0.5s ease;
+    padding: 30px 40px 80px 40px;    
 }
 
 .sidebar + .content {
@@ -335,6 +329,15 @@ a:focus, a:hover {
 
 .sidebar--expanded .content .content-overlay {
     display: block;
+}
+
+/* Animation */
+
+.animation .sidebar,
+.animation .content {
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    transition: all 0.5s ease;
 }
 
 /* Breadcrumbs */
@@ -451,6 +454,14 @@ a:focus, a:hover {
 
 .button__icon {
     margin-right: 10px;
+}
+
+.button:disabled {
+    cursor: not-allowed;
+}
+
+.button + .button {
+    margin-left: 10px;
 }
 
 /* Login */

@@ -33,7 +33,7 @@ namespace Documentor.Infrastructure
         {
             if (context.Exception.GetType() == typeof(AppException))
             {
-                string viewName = !String.IsNullOrWhiteSpace(ViewName) ? ViewName : context.RouteData.Values["action"].ToString();
+                string viewName = !string.IsNullOrWhiteSpace(ViewName) ? ViewName : context.RouteData.Values["action"].ToString();
                 var result = new ViewResult { ViewName = viewName };
                 var modelMetadata = new EmptyModelMetadataProvider();
                 result.ViewData = new ViewDataDictionary(modelMetadata, context.ModelState);

@@ -10,7 +10,7 @@ namespace System.Security.Claims
         public static string GetName(this ClaimsPrincipal principal)
         {
             string givenName = principal.FindFirstValue(ClaimTypes.GivenName);
-            if (!String.IsNullOrWhiteSpace(givenName))
+            if (!string.IsNullOrWhiteSpace(givenName))
                 return givenName;
 
             return principal.FindFirstValue(ClaimTypes.Name);

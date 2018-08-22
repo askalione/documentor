@@ -41,7 +41,7 @@ namespace Documentor.Controllers
         [HttpPost]
         public IActionResult Add(string email)
         {
-            if (String.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(email))
                 return Json(new JsonResponse(false, "Email required"));
             if (!IsValidEmail(email))
                 return Json(new JsonResponse(false, "Email not valid"));
@@ -56,7 +56,7 @@ namespace Documentor.Controllers
             }
 
             return Json(new JsonResponse(true))
-                .Notify(NotificationType.Success, $"{email} has been added");
+                .Notify(NotificationType.Success, $"{email} added");
         }
 
         [HttpPost]
@@ -67,7 +67,7 @@ namespace Documentor.Controllers
             {
                 _authorizationConfigModifier.Update(x => x.Emails = emails.ToArray());
                 return Json(new JsonResponse(true))
-                    .Notify(NotificationType.Success, $"{email} has been removed");
+                    .Notify(NotificationType.Success, $"{email} removed");
             }
             else
             {

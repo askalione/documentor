@@ -49,7 +49,7 @@ namespace Documentor.Services.Impl
             Nav nav = null;
 
             string navHash = ComputeNavHash();
-            if (!String.IsNullOrWhiteSpace(navHash))
+            if (!string.IsNullOrWhiteSpace(navHash))
             {
                 DirectoryInfo pagesDirectory = _pageManager.GetPagesDirectory();
                 DirectoryInfo cacheDirectory = _cacheManager.GetCacheDirectory();
@@ -59,7 +59,7 @@ namespace Documentor.Services.Impl
                 string navCachename = navHash + Cache.NavPostfix;
                 string navCache = await _cacheManager.LoadFromCacheAsync(navCachename);
 
-                if (!String.IsNullOrEmpty(navCache))
+                if (!string.IsNullOrEmpty(navCache))
                 {
                     try
                     {
@@ -79,7 +79,7 @@ namespace Documentor.Services.Impl
                 }
             }
 
-            return _navPerRequest = nav;
+            return _navPerRequest = nav ?? Nav.Empty;
         }
 
         public async Task<List<NavItem>> GetNavItemsAsync(DirectoryInfo scanDirectory, List<Folder> parentFolders)
@@ -101,8 +101,8 @@ namespace Documentor.Services.Impl
                 FileInfo pageFile = directory.GetFiles(Markdown.Filename, SearchOption.TopDirectoryOnly).FirstOrDefault();
                 if (pageFile != null)
                 {
-                    NavItem navItem = new NavItem(await GetNavItemDisplayNameAsync(String.Join(Separator.Path, navItemparentFolders.Select(x => x.DirectoryName)), folder.VirtualName),
-                        String.Join(Separator.Path, navItemparentFolders.Select(x => x.VirtualName)),
+                    NavItem navItem = new NavItem(await GetNavItemDisplayNameAsync(string.Join(Separator.Path, navItemparentFolders.Select(x => x.DirectoryName)), folder.VirtualName),
+                        string.Join(Separator.Path, navItemparentFolders.Select(x => x.VirtualName)),
                         folder.SequenceNumber);
                     (await GetNavItemsAsync(directory, navItemparentFolders))
                         .ForEach(x => navItem.AddChild(x));
@@ -134,10 +134,10 @@ namespace Documentor.Services.Impl
 
         private async Task<string> GetNavItemDisplayNameAsync(string path, string virtualName)
         {
-            string metadataDisplayName = String.Empty;
+            string metadataDisplayName = string.Empty;
             string metadata = await _pageManager.LoadMetadataAsync(path);
 
-            if (!String.IsNullOrWhiteSpace(metadata))
+            if (!string.IsNullOrWhiteSpace(metadata))
             {
                 try
                 {
@@ -149,7 +149,7 @@ namespace Documentor.Services.Impl
                 }
             }
 
-            return !String.IsNullOrWhiteSpace(metadataDisplayName) ? metadataDisplayName : virtualName;
+            return !string.IsNullOrWhiteSpace(metadataDisplayName) ? metadataDisplayName : virtualName;
         }
     }
 }

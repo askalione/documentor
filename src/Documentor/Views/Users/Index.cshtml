@@ -25,7 +25,7 @@
                     <a href="mailto:@email" class="text-primary">@email</a>
                 </td>
                 <td class="text-center">
-                    <button type="button" class="btn btn-link text-danger" title="Remove email" data-action="remove"><i class="la la-trash"></i></button>
+                    <button type="button" class="btn btn-link button text-danger" title="Remove email" @(User.FindFirstValue(ClaimTypes.Email).Equals(email, StringComparison.OrdinalIgnoreCase) ? "disabled" : "") data-action="remove"><i class="la la-trash"></i></button>
                 </td>
             </tr>
         }

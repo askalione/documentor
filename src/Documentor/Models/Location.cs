@@ -41,7 +41,7 @@ namespace Documentor.Models
 
         private string GetPath(Func<Folder, string> select)
         {
-            return String.Join(Separator.Path, _folders.Select(select));
+            return string.Join(Separator.Path, _folders.Select(select));
         }
 
         public override string ToString()

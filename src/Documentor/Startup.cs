@@ -20,16 +20,20 @@ namespace Documentor
 {
     public class Startup
     {
-        public const string ManagementRoutePrefix = "m";
+        public const string RoutePrefix = "m";
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment Environment { get; }
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment environment)
         {
             IConfigurationBuilder builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                .SetBasePath(environment.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
 
             Configuration = builder.Build();
+            Environment = environment;
             Bootstrap.Configure();
         }
 
@@ -40,7 +44,7 @@ namespace Documentor
 
             services.Configure<AppConfig>(Configuration.GetSection("App"));
             services.Configure<IOConfig>(Configuration.GetSection("IO"));
-            services.ConfigureModifier<AuthorizationConfig>(Configuration.GetSection("Authorization"));
+            services.ConfigureModifier<AuthorizationConfig>(Configuration.GetSection("Authorization"), Environment.IsDevelopment() ? $"appsettings.{Environment.EnvironmentName}.json" : "appsettings.json");
             services.AddScoped<ISignInManager, SignInManager>();
             services.AddSingleton<IMarkdownConverter, MarkdigConverter>();
             services.AddScoped<ICacheManager, CacheManager>();
@@ -57,7 +61,7 @@ namespace Documentor
                 })
                 .AddCookie(IdentityConstants.ApplicationScheme, options =>
                 {
-                    options.LoginPath = new PathString($"/{ManagementRoutePrefix}/Account/Login");
+                    options.LoginPath = new PathString($"/{RoutePrefix}/Account/Login");
                 })
                 .AddCookie(IdentityConstants.ExternalScheme, options =>
                 {
@@ -109,13 +113,13 @@ namespace Documentor
                         headers.Expires = DateTime.Now.AddDays(-1);
                     }
                     else
-                    {                        
+                    {
                         headers.CacheControl = new CacheControlHeaderValue()
                         {
                             Public = true,
                             MaxAge = TimeSpan.FromDays(365)
                         };
-                    } 
+                    }
                 }
             });
 
@@ -129,13 +133,13 @@ namespace Documentor
                 );
 
                 routes.MapRoute("manage",
-                    ManagementRoutePrefix + "/{controller}/{action}",
+                    RoutePrefix + "/{controller}/{action}",
                     new { action = "Index" },
                     new { isPage = new PageConstraint() }
                 );
 
                 routes.MapRoute("edit-page",
-                    ManagementRoutePrefix + "/Edit/{*virtualPath}",
+                    RoutePrefix + "/Edit/{*virtualPath}",
                     new { controller = "Pages", action = "Edit" }
                 );
 

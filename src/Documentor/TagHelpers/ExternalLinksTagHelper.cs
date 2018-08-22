@@ -43,7 +43,7 @@ namespace Documentor.TagHelpers
             };
 
             links = links
-                .Where(x => !String.IsNullOrWhiteSpace(x.Url))
+                .Where(x => !string.IsNullOrWhiteSpace(x.Url))
                 .ToList();
 
             if (links.Count == 0)

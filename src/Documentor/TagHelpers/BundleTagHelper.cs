@@ -28,7 +28,7 @@ namespace Documentor.TagHelpers
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (String.IsNullOrWhiteSpace(Name))
+            if (string.IsNullOrWhiteSpace(Name))
             {
                 output.SuppressOutput();
                 return;
@@ -46,7 +46,7 @@ namespace Documentor.TagHelpers
                         bundle.InputFiles.Select(inputFile => $"<script src='{inputFile.Replace("wwwroot", "")}' type='text/javascript'></script>") :
                         bundle.InputFiles.Select(inputFile => $"<link rel='stylesheet' href='{inputFile.Replace("wwwroot", "")}' />");
 
-                    output.Content.AppendHtml(String.Join("\n", outputFiles));
+                    output.Content.AppendHtml(string.Join("\n", outputFiles));
                 }
                 else
                 {

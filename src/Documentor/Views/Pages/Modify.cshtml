@@ -33,8 +33,7 @@
         <textarea asp-for="Description" rows="10" class="form-control"></textarea>
         <span asp-validation-for="Description"></span>
     </div>
-    <div class="btn-group">
-        <button type="submit" class="btn btn-success button"><i class="la la-save button__icon"></i>Save</button>
-        <a href="/m/Edit/@Model.VirtualPath" class="btn btn-secondary button"><i class="la la-edit button__icon"></i>Edit page data</a>
-    </div>
+    <button type="submit" class="btn btn-success button"><i class="la la-save button__icon"></i>Save</button>
+    <a href="/m/Edit/@Model.VirtualPath" class="btn btn-secondary button"><i class="la la-edit button__icon"></i>Edit page content</a>
+    <a href="@Url.Action("Index")" class="btn text-danger button"><i class="la la-undo button__icon"></i>Cancel</a>
 </form>

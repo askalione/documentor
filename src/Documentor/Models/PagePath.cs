@@ -13,7 +13,7 @@ namespace Documentor.Models
         {
             if (location == null)
                 throw new ArgumentNullException(nameof(location));
-            if (String.IsNullOrWhiteSpace(filename))
+            if (string.IsNullOrWhiteSpace(filename))
                 throw new ArgumentNullException(nameof(filename));
 
             Location = location;
