@@ -18,25 +18,25 @@ namespace Documentor.Services.Impl
     {
         private readonly ILogger<Pager> _logger;
         private readonly ICacheManager _cacheManager;
-        private readonly IPageManager _pageManager;
+        private readonly IPageIOManager _pageIOManager;
 
         private Nav _navPerRequest;
         private readonly Regex _directoryScanRegex;
 
         public PerRequestNavigator(ILogger<Pager> logger,
             ICacheManager cacheManager,
-            IPageManager pageManager)
+            IPageIOManager pageIOManager)
         {
             if (logger == null)
                 throw new ArgumentNullException(nameof(logger));
             if (cacheManager == null)
                 throw new ArgumentNullException(nameof(cacheManager));
-            if (pageManager == null)
-                throw new ArgumentNullException(nameof(pageManager));
+            if (pageIOManager == null)
+                throw new ArgumentNullException(nameof(pageIOManager));
 
             _logger = logger;
             _cacheManager = cacheManager;
-            _pageManager = pageManager;
+            _pageIOManager = pageIOManager;
 
             _directoryScanRegex = new Regex($@"^(0*)([1-9]+)\{Separator.Sequence}(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
@@ -51,7 +51,7 @@ namespace Documentor.Services.Impl
             string navHash = ComputeNavHash();
             if (!string.IsNullOrWhiteSpace(navHash))
             {
-                DirectoryInfo pagesDirectory = _pageManager.GetPagesDirectory();
+                DirectoryInfo pagesDirectory = _pageIOManager.GetPagesDirectory();
                 DirectoryInfo cacheDirectory = _cacheManager.GetCacheDirectory();
 
                 _cacheManager.ClearCache();
@@ -115,7 +115,7 @@ namespace Documentor.Services.Impl
         private string ComputeNavHash()
         {
             StringBuilder sb = new StringBuilder();
-            _pageManager.GetPagesDirectory()
+            _pageIOManager.GetPagesDirectory()
                 .GetDirectories("*", SearchOption.AllDirectories)
                 .Where(x => _directoryScanRegex.IsMatch(x.Name))
                 .OrderBy(x => x.FullName)
@@ -123,7 +123,7 @@ namespace Documentor.Services.Impl
                 .ForEach(directory =>
                 {
                     string hash = directory.LastWriteTime.ToString("yyyyMMddHHmmss");
-                    FileInfo metadataFile = _pageManager.GetMetadataFile(directory.FullName);
+                    FileInfo metadataFile = _pageIOManager.GetMetadataFile(directory.FullName);
                     if (metadataFile != null)
                         hash += metadataFile.LastWriteTime.ToString("yyyyMMddHHmmss");
                     sb.Append(hash);
@@ -135,7 +135,7 @@ namespace Documentor.Services.Impl
         private async Task<string> GetNavItemDisplayNameAsync(string path, string virtualName)
         {
             string metadataDisplayName = string.Empty;
-            string metadata = await _pageManager.LoadMetadataAsync(path);
+            string metadata = await _pageIOManager.LoadMetadataAsync(path);
 
             if (!string.IsNullOrWhiteSpace(metadata))
             {

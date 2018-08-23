@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace Documentor.Services.Impl
 {
-    public class PageManager : IPageManager
+    public class PageIOManager : IPageIOManager
     {
         private readonly PagesSettings _pagesSettings;
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        public PageManager(IOptionsSnapshot<IOConfig> configOptions,
+        public PageIOManager(IOptionsSnapshot<IOConfig> configOptions,
             IHostingEnvironment hostingEnvironment)
         {
             if (configOptions == null)

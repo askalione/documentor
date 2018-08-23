@@ -12,19 +12,19 @@ namespace Documentor.Services.Impl
 {
     public class DumpProcessor : IDumpProcessor
     {
-        private readonly IPageManager _pageManager;
+        private readonly IPageIOManager _pageIOManager;
 
-        public DumpProcessor(IPageManager pageManager)
+        public DumpProcessor(IPageIOManager pageIOManager)
         {
-            if (pageManager == null)
-                throw new ArgumentNullException(nameof(pageManager));
+            if (pageIOManager == null)
+                throw new ArgumentNullException(nameof(pageIOManager));
 
-            _pageManager = pageManager;
+            _pageIOManager = pageIOManager;
         }
 
         public byte[] ExportDump()
         {
-            string path = _pageManager.GetPagesDirectory().FullName;
+            string path = _pageIOManager.GetPagesDirectory().FullName;
             using (MemoryStream outputMemoryStream = new MemoryStream())
             {
                 using (ZipOutputStream zipOutputStream = new ZipOutputStream(outputMemoryStream))

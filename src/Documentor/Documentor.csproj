@@ -19,12 +19,16 @@
   <ItemGroup>
     <Compile Remove="Cache\**" />
     <Compile Remove="Pages\**" />
+    <Compile Remove="wwwroot\demo\**" />
     <Content Remove="Cache\**" />
     <Content Remove="Pages\**" />
+    <Content Remove="wwwroot\demo\**" />
     <EmbeddedResource Remove="Cache\**" />
     <EmbeddedResource Remove="Pages\**" />
+    <EmbeddedResource Remove="wwwroot\demo\**" />
     <None Remove="Cache\**" />
     <None Remove="Pages\**" />
+    <None Remove="wwwroot\demo\**" />
   </ItemGroup>
 
   <ItemGroup>

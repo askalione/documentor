@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Documentor.Services
 {
-    public interface IPageManager
+    public interface IPageIOManager
     {
         DirectoryInfo GetPagesDirectory();
         Task<string> LoadPage(string path);

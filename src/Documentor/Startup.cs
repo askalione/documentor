@@ -48,7 +48,7 @@ namespace Documentor
             services.AddScoped<ISignInManager, SignInManager>();
             services.AddSingleton<IMarkdownConverter, MarkdigConverter>();
             services.AddScoped<ICacheManager, CacheManager>();
-            services.AddScoped<IPageManager, PageManager>();
+            services.AddScoped<IPageIOManager, PageIOManager>();
             services.AddScoped<INavigator, PerRequestNavigator>();
             services.AddScoped<IPager, Pager>();
             services.AddScoped<IDumpProcessor, DumpProcessor>();

@@ -2,12 +2,4 @@
 
 # Multilanguage
 
--- Development
-
-# IPager and IPageManager what responsibility?!
-
--- Extensibility!
-
-# Search
-
-#? Themes
+# Search (Extensibility)
