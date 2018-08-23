@@ -130,6 +130,8 @@ namespace Documentor.Services.Impl
             if (pagePath == null)
                 throw new AppException("Page not found");
 
+            _cacheManager.ClearCache("*" + Cache.NavPostfix);
+
             string pageDirectoryPath = pagePath.Location.GetDirectoryPath();
 
             PageMetadata pageMetadata = await GetPageMetadataAsync(pagePath);
@@ -149,10 +151,9 @@ namespace Documentor.Services.Impl
                 Directory.Move(Path.Combine(pagesDirectoryPath, pageDirectoryPath), Path.Combine(pagesDirectoryPath, fakePageDirectoryPath));
                 Directory.Move(Path.Combine(pagesDirectoryPath, fakePageDirectoryPath), Path.Combine(pagesDirectoryPath, newPageDirectoryPath));
             }
-            _cacheManager.ClearCache("*" + Cache.NavPostfix);
         }
 
-        public void RemovePage(string virtualPath)
+        public void DeletePage(string virtualPath)
         {
             if (string.IsNullOrWhiteSpace(virtualPath))
                 throw new ArgumentNullException(nameof(virtualPath));
@@ -163,6 +164,105 @@ namespace Documentor.Services.Impl
 
             Directory.Delete(Path.Combine(_pageManager.GetPagesDirectory().FullName, pageLocation.GetDirectoryPath()), true);
             _cacheManager.ClearCache("*" + Cache.NavPostfix);
+        }
+
+        public void MovePage(PageMoveCommand command)
+        {
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+
+            command.NewParentVirtualPath = command.NewParentVirtualPath?.Trim(Separator.Path);
+
+            string basePath = _pageManager.GetPagesDirectory().FullName;
+
+            Location location = GetLocation(command.VirtualPath);
+            if (location == null)
+                throw new AppException("Page not found");
+
+            _cacheManager.ClearCache("*" + Cache.NavPostfix);
+
+            string directoryName = location.GetDestinationFolder().DirectoryName;
+            string directoryPath = Path.GetFullPath(Path.Combine(basePath, location.GetDirectoryPath()));
+            int oldSequenceNumber = int.Parse(directoryName.Split(Separator.Sequence)[0]);
+
+            string newDirectoryName = (command.NewSequenceNumber < 10 ? "0" : "") + command.NewSequenceNumber.ToString() + Separator.Sequence + directoryName.Split(Separator.Sequence)[1];
+            string newDirectoryPath = Path.GetFullPath(Path.Combine(basePath, newDirectoryName));
+
+            if (command.NewParentVirtualPath != null)
+            {
+                if (!command.NewParentVirtualPath.Equals(""))
+                {
+                    Location parentLocation = GetLocation(command.NewParentVirtualPath);
+                    if (parentLocation == null)
+                        throw new AppException("Parent page not found");
+                    newDirectoryPath = Path.GetFullPath(Path.Combine(basePath, parentLocation.GetDirectoryPath(), newDirectoryName));
+                }
+            }
+
+            // Move directory
+            if (!newDirectoryPath.Equals(directoryPath, StringComparison.OrdinalIgnoreCase))
+                Directory.Move(directoryPath, newDirectoryPath);
+            
+            Regex regex = new Regex($@"^(0*)([1-9]+)\{Separator.Sequence}(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            // Change sequence number
+            // If not move to another parent directory
+            if (command.NewParentVirtualPath == null)
+            {
+                new DirectoryInfo(newDirectoryPath).Parent.GetDirectories()
+                    .Where(x => regex.IsMatch(x.Name))
+                    .Where(x => !x.FullName.Equals(newDirectoryPath, StringComparison.OrdinalIgnoreCase))
+                    .ToList()
+                    .ForEach(x =>
+                    {
+                        string[] sequenceDirectoryNameParts = x.Name.Split(Separator.Sequence);
+                        if (int.TryParse(sequenceDirectoryNameParts[0], out int sequenceNumber) &&
+                            ((command.NewSequenceNumber < oldSequenceNumber) && (sequenceNumber >= command.NewSequenceNumber && sequenceNumber < oldSequenceNumber)) ||
+                            ((command.NewSequenceNumber > oldSequenceNumber) && (sequenceNumber <= command.NewSequenceNumber && sequenceNumber > oldSequenceNumber)))
+                        {
+                            sequenceNumber = sequenceNumber + (command.NewSequenceNumber < oldSequenceNumber ? 1 : -1);
+                            string sequenceDirectoryName = (sequenceNumber < 10 ? "0" : "") + sequenceNumber.ToString() + Separator.Sequence + sequenceDirectoryNameParts[1];
+                            Directory.Move(x.FullName, Path.Combine(x.Parent.FullName, sequenceDirectoryName));
+                        }
+                    });
+            }
+            // Move to another parent directory
+            else
+            {
+                // New parent
+                new DirectoryInfo(newDirectoryPath).Parent.GetDirectories()
+                    .Where(x => regex.IsMatch(x.Name))
+                    .Where(x => !x.FullName.Equals(newDirectoryPath, StringComparison.OrdinalIgnoreCase))
+                    .ToList()
+                    .ForEach(x =>
+                    {
+                        string[] sequenceDirectoryNameParts = x.Name.Split(Separator.Sequence);
+                        if (int.TryParse(sequenceDirectoryNameParts[0], out int sequenceNumber) &&
+                            sequenceNumber >= command.NewSequenceNumber)
+                        {
+                            sequenceNumber++;
+                            string sequenceDirectoryName = (sequenceNumber < 10 ? "0" : "") + sequenceNumber.ToString() + Separator.Sequence + sequenceDirectoryNameParts[1];
+                            string newPath = Path.Combine(x.Parent.FullName, sequenceDirectoryName);
+                            directoryPath = directoryPath.Replace(x.FullName, newPath);
+                            Directory.Move(x.FullName, newPath);
+                        }
+                    });
+
+                // Old parent
+                new DirectoryInfo(directoryPath).Parent.GetDirectories()
+                    .Where(x => regex.IsMatch(x.Name))
+                    .ToList()
+                    .ForEach(x =>
+                    {
+                        string[] sequenceDirectoryNameParts = x.Name.Split(Separator.Sequence);
+                        if (int.TryParse(sequenceDirectoryNameParts[0], out int sequenceNumber) &&
+                            sequenceNumber > oldSequenceNumber)
+                        {
+                            sequenceNumber--;
+                            string sequenceDirectoryName = (sequenceNumber < 10 ? "0" : "") + sequenceNumber.ToString() + Separator.Sequence + sequenceDirectoryNameParts[1];
+                            Directory.Move(x.FullName, Path.Combine(x.Parent.FullName, sequenceDirectoryName));
+                        }
+                    });
+            }
         }
 
         private PagePath GetPagePath(string virtualPath)

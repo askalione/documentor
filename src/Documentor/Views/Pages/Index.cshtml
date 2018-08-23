@@ -11,11 +11,13 @@
 
 <div class="tree">
     <div class="tree__actions">
-        <div class="btn-group">
-            <button type="button" class="btn btn-primary button" data-action="add" data-url="@Url.Action("Add")"><i class="la la-plus button__icon"></i>Add new</button>
-            <button type="button" class="btn btn-secondary button" disabled="disabled" data-action="modify" data-url="@Url.Action("Modify")"><i class="la la-gear button__icon"></i>Modify selected</button>
-            <button type="button" class="btn btn-secondary button" disabled="disabled" data-action="remove" data-url="@Url.Action("Remove")"><i class="la la-trash button__icon"></i>Remove selected</button>
+        <div class="btn-group flex-wrap">
+            <button type="button" class="btn btn-primary button" data-action="add" data-url="@Url.Action("Add")" title="Add new"><i class="la la-plus button__icon"></i>Add</button>
+            <button type="button" class="btn btn-secondary button" disabled="disabled" data-action="edit" data-url="/m/Edit" title="Edit selected"><i class="la la-edit"></i></button>
+            <button type="button" class="btn btn-secondary button" disabled="disabled" data-action="modify" data-url="@Url.Action("Modify")" title="Modify selected"><i class="la la-gear"></i></button>
+            <button type="button" class="btn btn-secondary button" disabled="disabled" data-action="delete" data-url="@Url.Action("Delete")" title="Delete selected"><i class="la la-trash"></i></button>
         </div>
+        <input type="hidden" data-action="move" data-url="@Url.Action("Move")" />
     </div>
     <div class="tree__items">
         @await Html.PartialAsync("_PagesTree", Model.Items)

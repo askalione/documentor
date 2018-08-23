@@ -1,9 +1,5 @@
 # Real world example for demo page
 
-# Page ordering
-
-# Install by steps
-
 # Multilanguage
 
 -- Development

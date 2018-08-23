@@ -5,6 +5,7 @@ using Documentor.Models;
 using Documentor.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SmartBreadcrumbs;
 using System;
 using System.Collections.Generic;
@@ -31,8 +32,7 @@ namespace Documentor.Controllers
             _pager = pager;
             _navigator = navigator;
         }
-
-        
+                
         [Breadcrumb("Pages")]
         public async Task<IActionResult> Index()
         {
@@ -139,7 +139,7 @@ namespace Documentor.Controllers
             if (ModelState.IsValid)
             {
                await _pager.AddPageAsync(addCommand);
-                return RedirectToAction(nameof(Page), new { virtualPath = addCommand.ParentVirtualPath + Separator.Path + addCommand.VirtualName })
+                return RedirectToAction(nameof(Index))
                     .Notify(NotificationType.Success, $"Page \"{addCommand.Title}\" added");
             }
             return View(addCommand);
@@ -169,7 +169,7 @@ namespace Documentor.Controllers
             {
                 await _pager.ModifyPageAsync(modifyCommand);
                 string newVirtualPath = modifyCommand.VirtualPath.Remove(modifyCommand.VirtualPath.LastIndexOf(Separator.Path) + 1) + modifyCommand.VirtualName;
-                return RedirectToAction(nameof(Page), new { virtualPath = newVirtualPath })
+                return RedirectToAction(nameof(Index))
                     .Notify(NotificationType.Success, $"Page \"{modifyCommand.Title}\" modified");
             }
             return View(modifyCommand);
@@ -177,11 +177,20 @@ namespace Documentor.Controllers
 
         [HttpPost]
         [HandleException]
-        public IActionResult Remove(string virtualPath)
+        public IActionResult Delete(string virtualPath)
         {
-            _pager.RemovePage(virtualPath);
+            _pager.DeletePage(virtualPath);
             return Json(new JsonResponse(true))
                 .Notify(NotificationType.Success, $"Page with virtual path \"{virtualPath}\" deleted");
+        }
+
+        [HttpPost]
+        [HandleException]
+        public IActionResult Move(PageMoveCommand moveCommand)
+        {
+            _pager.MovePage(moveCommand);
+            return Json(new JsonResponse(true))
+                .Notify(NotificationType.Success, $"Page \"{moveCommand.VirtualPath.Substring(moveCommand.VirtualPath.LastIndexOf(Separator.Path) + 1)}\" moved");
         }
     }
 }

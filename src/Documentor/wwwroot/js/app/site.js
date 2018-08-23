@@ -26,6 +26,12 @@
             $(window).resize(function (e) {
                 $('body').removeClass('sidebar--expanded');
             });
+
+            $(document).keyup(function (e) {
+                if (e.keyCode == 27 && $('body').hasClass('sidebar--expanded')) {
+                    $('.sidebar-toggle').click();
+                }
+            });
         }
     };
 

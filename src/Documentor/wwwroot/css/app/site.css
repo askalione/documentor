@@ -464,6 +464,10 @@ a:focus, a:hover {
     margin-left: 10px;
 }
 
+.buttons--compact .button {
+    margin-left: 0;
+}
+
 /* Login */
 
 .login {
