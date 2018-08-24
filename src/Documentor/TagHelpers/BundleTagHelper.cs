@@ -37,6 +37,8 @@ namespace Documentor.TagHelpers
             _relativeName = Name.Replace("wwwroot", "~");
             _absoluteName = Name.Replace("~", "wwwroot");
 
+            output.TagName = "";
+
             if (_hostingEnvironment.IsDevelopment())
             {
                 Bundle bundle = await GetBundleAsync();
