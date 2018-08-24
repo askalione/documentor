@@ -65,7 +65,7 @@ namespace Documentor.Controllers
             if (Request.Method.Equals(HttpMethod.Post.Method))
             {
                 page = await _pager.EditPageAsync(page.Context.Path, markdown);
-                return RedirectToAction(nameof(Page), new { virtualPath })
+                return Redirect("/" + virtualPath)
                     .Notify(NotificationType.Success, "Changes saved");
             }
 

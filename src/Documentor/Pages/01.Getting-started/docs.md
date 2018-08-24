@@ -13,5 +13,6 @@ Latest version on [GitHub](https://github.com/askalione/documentor/releases/late
 * .NET Core 2.1 or later - [download](https://www.microsoft.com/net/download/dotnet-core/2.1).
 * Don't be lobster.
 
+It’s recommended to use [XDocumentor](https://github.com/askalione/xdocumentor) for automatic documents generation in Markdown format from Xml-comments in your *.dll.
 
 
