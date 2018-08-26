@@ -56,7 +56,8 @@ namespace Documentor.Controllers
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
             if (!string.IsNullOrWhiteSpace(remoteError))
-                return RedirectToAction(nameof(Login));
+                return RedirectToAction(nameof(Login))
+                    .Notify(NotificationType.Error, "Remote error");
 
             Services.SignInResult signInResult = await _signInManager.TrySignInAsync(true);
 

@@ -16,12 +16,10 @@
 <div class="page-content">
     <div class="page__editor">
         <div class="page__editor-overlay"></div>
-        @using (Html.BeginForm("Edit", "Pages", FormMethod.Post, new { @class = "page__editor-form" }))
-        {
-
+        <form action="/m/Edit/@Model.Context.Path.Location.GetVirtualPath()" method="POST" class="page__editor-form">
             <textarea id="editor" name="markdown" style="display: none;">@Model.Data.Markdown</textarea>
             @Html.Hidden("virtualPath", Model.Context.Path.Location.GetVirtualPath())
-        }
+        </form>
     </div>
 </div>
 

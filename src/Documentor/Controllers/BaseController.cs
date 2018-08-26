@@ -1,4 +1,5 @@
-﻿using Documentor.Models;
+﻿using Documentor.Infrastructure;
+using Documentor.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Documentor.Controllers

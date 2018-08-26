@@ -48,7 +48,7 @@ namespace Documentor.Infrastructure
             }
         }
 
-        private bool IsAjaxRequest(HttpRequest httpRequest)
+        private static bool IsAjaxRequest(HttpRequest httpRequest)
         {
             return httpRequest.Headers["x-requested-with"] == "XMLHttpRequest";
         }

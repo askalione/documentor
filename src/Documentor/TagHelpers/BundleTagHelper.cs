@@ -58,7 +58,7 @@ namespace Documentor.TagHelpers
             else
             {
                 output.Content.AppendHtml(Name.EndsWith(".js") ? 
-                    $"<script src='/{_relativeName.Replace("~", "")}' type='text/javascript'></script>" :
+                    $"<script src='{_relativeName.Replace("~", "")}' type='text/javascript'></script>" :
                     $"<link rel='stylesheet' href='{_relativeName.Replace("~", "")}' />");
             }
         }
