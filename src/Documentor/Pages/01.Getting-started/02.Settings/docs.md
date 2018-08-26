@@ -18,7 +18,7 @@ Settings from `appsettings.json` in root directory looks like:
   "Authorization": { // Authorizations settings.
     "Emails": [] // List containing email addresses available to authorize. Required to configure.
   },
-  "Authentication": { // List of OAuth 2.0 providers . Required to configure at least one provider.
+  "Authentication": { // List of OAuth 2.0 providers. Required to configure at least one provider.
     ...
   },
   "IO": { // Application directories settings.
@@ -50,7 +50,7 @@ Settings from `appsettings.json` in root directory looks like:
 	}
 	```
 
-2. Add at least one email address to configure `Authorization` section. With that email address u should authorize by configured OAuth provider.
+2. Add at least one email address to configure `Authorization` section. With that email address you should authorize by configured OAuth provider.
 
 	For example:
 	```json
