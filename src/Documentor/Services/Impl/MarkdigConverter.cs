@@ -11,6 +11,8 @@ namespace Documentor.Services.Impl
             _pipeline = new MarkdownPipelineBuilder()
                  .UseBootstrap()
                  .UsePipeTables()
+                 .UseAutoIdentifiers(Markdig.Extensions.AutoIdentifiers.AutoIdentifierOptions.GitHub)
+                 .UseNoFollowLinks()
                  .Build();
         }
 

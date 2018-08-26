@@ -7,7 +7,7 @@ body {
 
 body {
     position: relative;
-    font-family: "Montserrat", "Helvetica", "Tahoma", Geneva, "Arial", sans-serif;
+    font-family: "Open Sans", "Helvetica", "Tahoma", Geneva, "Arial", sans-serif;
     font-weight: 400;
     font-size: 1.05rem;
     line-height: 1.7;
@@ -374,14 +374,25 @@ a:focus, a:hover {
 
 /* Pages */
 
-.page-content h1, h2, h3, h4 {
+.page-content h1, h2, h3, h4, h5 {
     margin-bottom: 30px;
 }
 
+.page-content pre {
+    background-color: rgba(245, 242, 240, .7);
+    border-radius: 4px;
+    border: 1px solid #e5e1de;
+    padding: 1em;
+    max-height: 500px;
+}
+
+.page-content pre + * {
+    margin-top: 30px;
+}
+
 .page-content pre > code {
-    background-color: rgba(0,0,0,.05);
     display: block;
-    padding: .5rem;
+    /*padding: .5rem;*/
     -webkit-text-size-adjust: none;
     overflow-x: auto;
     white-space: pre;
@@ -462,6 +473,10 @@ a:focus, a:hover {
 
 .button + .button {
     margin-left: 10px;
+}
+
+.buttons--compact .button {
+    margin-left: 0;
 }
 
 /* Login */

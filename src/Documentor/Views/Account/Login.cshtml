@@ -34,7 +34,7 @@
                 {
                     using (Html.BeginForm("ExternalLogin", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
                     {
-                        <div class="buttons">
+                        <div class="buttons buttons--compact">
                             @foreach (var provider in loginProviders)
                             {
                                 <button type="submit" class="btn btn-primary btn-block button" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">

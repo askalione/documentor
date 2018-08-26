@@ -37,6 +37,8 @@ namespace Documentor.TagHelpers
             _relativeName = Name.Replace("wwwroot", "~");
             _absoluteName = Name.Replace("~", "wwwroot");
 
+            output.TagName = "";
+
             if (_hostingEnvironment.IsDevelopment())
             {
                 Bundle bundle = await GetBundleAsync();
@@ -56,7 +58,7 @@ namespace Documentor.TagHelpers
             else
             {
                 output.Content.AppendHtml(Name.EndsWith(".js") ? 
-                    $"<script src='/{_relativeName.Replace("~", "")}' type='text/javascript'></script>" :
+                    $"<script src='{_relativeName.Replace("~", "")}' type='text/javascript'></script>" :
                     $"<link rel='stylesheet' href='{_relativeName.Replace("~", "")}' />");
             }
         }

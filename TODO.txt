@@ -1,17 +1,5 @@
 # Real world example for demo page
 
-# Page ordering
-
-# Install by steps
-
 # Multilanguage
 
--- Development
-
-# IPager and IPageManager what responsibility?!
-
--- Extensibility!
-
-# Search
-
-#? Themes
+# Search (Extensibility)

@@ -16,6 +16,10 @@
 
 /* Pages tree */
 
+.tree__items {
+    overflow-x: auto;
+}
+
 .tree__actions {
     margin-bottom: 30px;
 }

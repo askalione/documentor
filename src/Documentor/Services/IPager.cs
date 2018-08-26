@@ -10,6 +10,7 @@ namespace Documentor.Services
         Task AddPageAsync(PageAddCommand command);
         Task<PageContext> GetPageContextAsync(string virtualPath);
         Task ModifyPageAsync(PageModifyCommand command);
-        void RemovePage(string virtualPath);
+        void DeletePage(string virtualPath);
+        void MovePage(PageMoveCommand command);
     }
 }

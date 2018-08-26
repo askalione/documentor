@@ -28,7 +28,7 @@ namespace Documentor.TagHelpers
 
             output.TagName = "script";
             output.Attributes.Add("type", "text/javascript");
-            notifications.ForEach(n => output.Content.AppendHtml($"notifications.add('{n.Type.ToString().ToLower()}', '{n.Message}')"));
+            notifications.ForEach(n => output.Content.AppendHtml($"notifications.add('{n.Type.ToString().ToLower()}', '{n.Message}');"));
         }
     }
 }

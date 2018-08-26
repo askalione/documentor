@@ -6,6 +6,7 @@
       "wwwroot/css/vendors/bootstrap.min.css",
       "wwwroot/css/vendors/scrollbar.css",
       "wwwroot/css/vendors/toastr.min.css",
+      "wwwroot/css/vendors/prism.css",
       "wwwroot/css/app/notifications.css",
       "wwwroot/css/app/site.css"
     ]
@@ -32,6 +33,7 @@
       "wwwroot/js/vendors/bootstrap.min.js",
       "wwwroot/js/vendors/jquery.scrollbar.min.js",
       "wwwroot/js/vendors/toastr.min.js",
+      "wwwroot/js/vendors/prism.js",
       "wwwroot/js/app/notifications.js",
       "wwwroot/js/app/site.js"
     ],
