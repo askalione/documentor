@@ -3,7 +3,7 @@
 
 # Documentor
 
-Documentor is extremly light and easy to use flat file CMS on [.NET Core 2.1](https://www.microsoft.com/net/download/dotnet-core/2.1) for build software documentation. 
+Documentor is extremly light and easy to use flat file CMS on [.NET 7](https://dotnet.microsoft.com/download/dotnet/7.0) for build software documentation. 
 
 Inspiration was found in flat file CMS on PHP - [Grav](https://github.com/getgrav/grav). Of course, Grav has more functions in comparison with Documentor, but at the same time Documentor holds all essential functions to quickly and simply create a platform for your software documentation using **.NET stack**.
 
@@ -39,7 +39,6 @@ Download last release and open solution. Publish application to target site dire
 Documentor uses authorization on basis of [OAuth 2.0](https://oauth.net/2/) and available emails list. By default next resources are available:
 - Google;
 - GitHub;
-- Facebook;
 - Yandex;
 - Vkontakte.
 

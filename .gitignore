@@ -6,15 +6,36 @@
 
 # Build results
 [Dd]ebug/
+[Dd]ebugPublic/
 [Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
-[Dd]ist/
 
-# NuGet
-[Nn]u[Gg]et/[Pp]ackages/
+# NuGet Packages
+[Pp]ackages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
+# NuGet v3's project.json files produces more ignoreable files
+*.nuget.props
+*.nuget.targets
+
+# Tools configurations
+**/*.[Tt]ools/[Cc]onfig.json
+
+# DNX
+project.lock.json
+artifacts/
 
 *_i.c
 *_p.c
@@ -60,3 +81,25 @@
 *.mdf
 *.ldf
 *.ndf
+
+# Visual Studio Code config directory
+.vscode/
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# ReSharper is a .NET coding add-in
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Click-Once directory
+publish/
+
+# Node.js directories
+node_modules/
+package-lock.json
+
+# Assets
+**/wwwroot/assets/

@@ -1,7 +1,4 @@
-﻿using Documentor.Services;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
+using Documentor.Services.Navigation;
 
 namespace Documentor.ViewComponents
 {

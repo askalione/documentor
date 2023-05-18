@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documentor", "src\Documentor\Documentor.csproj", "{69CEFCFA-119B-4646-BBF1-BDD0013A7132}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EB226254-13A8-40EB-BB4A-21F65B0334BF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solution Items", "{6CCA4CAC-6FC8-4AE2-837A-C78989CFC493}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69CEFCFA-119B-4646-BBF1-BDD0013A7132}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69CEFCFA-119B-4646-BBF1-BDD0013A7132}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69CEFCFA-119B-4646-BBF1-BDD0013A7132}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69CEFCFA-119B-4646-BBF1-BDD0013A7132}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{69CEFCFA-119B-4646-BBF1-BDD0013A7132} = {EB226254-13A8-40EB-BB4A-21F65B0334BF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E698D026-F218-42A9-ABF3-383F44C56FE8}
+	EndGlobalSection
+EndGlobal

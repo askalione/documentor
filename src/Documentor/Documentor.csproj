@@ -1,74 +1,68 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <Version>1.0.3</Version>
-    <Authors>Alexey Drapash</Authors>
-    <Company>Creacode</Company>
-    <Product>Documentor</Product>
-    <PackageId>Documentor</PackageId>
-    <AssemblyVersion>1.0.3</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-    <NeutralLanguage>en</NeutralLanguage>
-    <Description>Extremly light and easy to use flat file CMS on .NET for build software documentation</Description>
-    <Copyright>Copyright © 2018 Alexey Drapash</Copyright>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Cache\**" />
-    <Compile Remove="Pages\**" />
-    <Compile Remove="wwwroot\demo\**" />
-    <Content Remove="Cache\**" />
-    <Content Remove="Pages\**" />
-    <Content Remove="wwwroot\demo\**" />
-    <EmbeddedResource Remove="Cache\**" />
-    <EmbeddedResource Remove="Pages\**" />
-    <EmbeddedResource Remove="wwwroot\demo\**" />
-    <None Remove="Cache\**" />
-    <None Remove="Pages\**" />
-    <None Remove="wwwroot\demo\**" />
-  </ItemGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == '' Or '$(Configuration)' == 'Debug'">
+        <EnvironmentName>Development</EnvironmentName>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="2.0.0" />
-    <PackageReference Include="AspNet.Security.OAuth.Vkontakte" Version="2.0.0" />
-    <PackageReference Include="AspNet.Security.OAuth.Yandex" Version="2.0.0" />
-    <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
-    <PackageReference Include="Markdig" Version="0.15.1" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.2" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
-    <PackageReference Include="NLog" Version="4.5.8" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="4.6.0" />
-    <PackageReference Include="SharpZipLib" Version="1.0.0" />
-    <PackageReference Include="SmartBreadcrumbs" Version="1.0.3.2" />
-  </ItemGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <EnvironmentName>Production</EnvironmentName>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Content Update="nlog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>    
-  </ItemGroup>
+    <ItemGroup>
+      <None Remove=".gitignore" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Content Remove="wwwroot\css\*" CopyToPublishDirectory="Never" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
-    <Content Include="wwwroot\css\site.min.css" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
-    <Content Include="wwwroot\css\editor.min.css" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
-    <Content Include="wwwroot\css\tree.min.css" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
-    <Content Remove="wwwroot\js\*" CopyToPublishDirectory="Never" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
-    <Content Include="wwwroot\js\site.min.js" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
-    <Content Include="wwwroot\js\editor.min.js" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
-    <Content Include="wwwroot\js\pages.min.js" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
-    <Content Include="wwwroot\js\users.min.js" CopyToPublishDirectory="Always" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Content Remove="appsettings.Development.json" CopyToPublishDirectory="Never" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
-  </ItemGroup>
-    
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\..\dist\$(Version)\</OutputPath>
-  </PropertyGroup>
+    <ItemGroup>
+        <Using Include="Microsoft.AspNetCore.Mvc" />
+        <Using Include="Structr.Abstractions" />
+        <Using Include="Structr.Abstractions.Extensions" />       
+        <Using Include="Structr.AspNetCore.Json" />
+        <Using Include="Structr.AspNetCore.Mvc" />
+        <Using Include="Structr.AspNetCore.JavaScript" />       
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="7.0.2" />
+        <PackageReference Include="AspNet.Security.OAuth.Vkontakte" Version="7.0.2" />
+        <PackageReference Include="AspNet.Security.OAuth.Yandex" Version="7.0.2" />
+        <PackageReference Include="Markdig" Version="0.31.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="7.0.5" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.5" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.5" />
+        <PackageReference Include="NLog.Web.AspNetCore" Version="5.2.3" />
+        <PackageReference Include="SharpZipLib" Version="1.4.2" />
+        <PackageReference Include="SmartBreadcrumbs" Version="1.0.3.3" />
+        <PackageReference Include="Structr.Abstractions" Version="4.0.0" />
+        <PackageReference Include="Structr.AspNetCore" Version="6.3.0" />
+        <PackageReference Include="WebMarkupMin.AspNetCore7" Version="2.13.9" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Update="ClientApp\**" CopyToPublishDirectory="Never" CopyToOutputDirectory="Never" />
+        <Content Update="appsettings.*.json" CopyToPublishDirectory="Never" CopyToOutputDirectory="Never" />       
+        <Content Update="nlog.config" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+    <Target Name="CreateLogsFolder" AfterTargets="Publish">
+        <MakeDir Directories="$(PublishUrl)\Logs" Condition="!Exists('$(PublishUrl)\Logs')" />
+        <Exec Command="del /s /q &quot;$(PublishUrl)\Logs&quot;" />
+    </Target>
+
+    <Target Name="CreateCacheFolder" AfterTargets="Publish">
+        <MakeDir Directories="$(PublishUrl)\Cache" Condition="!Exists('$(PublishUrl)\Cache')" />
+        <Exec Command="del /s /q &quot;$(PublishUrl)\Cache&quot;" />
+    </Target>
+
+    <Target Name="BuildAssets" AfterTargets="PreBuildEvent">
+        <Exec Command="cd $(ProjectDir)\ClientApp&#xD;&#xA;npm run build:dev&#xD;&#xA;" Condition="'$(EnvironmentName)' == 'Development' AND !Exists('$(ProjectDir)\wwwroot\assets')" />
+        <Exec Command="cd $(ProjectDir)\ClientApp&#xD;&#xA;npm run build&#xD;&#xA;" Condition="'$(EnvironmentName)' == 'Production'" />
+    </Target>
 
 </Project>

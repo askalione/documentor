@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Documentor.Extensions;
-using Documentor.Models;
-using Documentor.Services;
+using Documentor.Framework.Notifications;
+using Documentor.Services.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Documentor.Controllers
 {
-    public class AccountController : BaseController
+    public class AccountController : AppController
     {
         private readonly ISignInManager _signInManager;
-        
+
         public AccountController(ISignInManager signInManager)
         {
             if (signInManager == null)
@@ -25,9 +18,9 @@ namespace Documentor.Controllers
             _signInManager = signInManager;
         }
 
-        public async Task<IActionResult> Login(string returnUrl = null)
+        public async Task<IActionResult> Login(string? returnUrl = null)
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity!.IsAuthenticated)
                 return RedirectToAction("Page", "Pages");
 
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
@@ -45,7 +38,7 @@ namespace Documentor.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ExternalLogin(string provider, string returnUrl = null)
+        public IActionResult ExternalLogin(string provider, string? returnUrl = null)
         {
             var redirectUrl = Url.Action(nameof(ExternalLoginCallback), new { returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
@@ -53,26 +46,26 @@ namespace Documentor.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
         {
             if (!string.IsNullOrWhiteSpace(remoteError))
                 return RedirectToAction(nameof(Login))
                     .Notify(NotificationType.Error, "Remote error");
 
-            Services.SignInResult signInResult = await _signInManager.TrySignInAsync(true);
+            Services.Authentication.SignInResult signInResult = await _signInManager.TrySignInAsync(true);
 
             IActionResult result = RedirectToAction(nameof(Login));
 
             switch (signInResult)
             {
-                case Services.SignInResult.Successfully:
+                case Services.Authentication.SignInResult.Successfully:
                     if (!string.IsNullOrWhiteSpace(returnUrl))
                         return RedirectToLocal(returnUrl);
                     return RedirectToAction("Page", "Pages");
-                case Services.SignInResult.Failure:
+                case Services.Authentication.SignInResult.Failure:
                     result = result.Notify(NotificationType.Error, "Login failed");
                     break;
-                case Services.SignInResult.AccessDenied:
+                case Services.Authentication.SignInResult.AccessDenied:
                     result = result.Notify(NotificationType.Error, "Access denied");
                     break;
             }

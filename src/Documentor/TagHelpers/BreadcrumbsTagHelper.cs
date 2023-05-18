@@ -1,14 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Microsoft.AspNetCore.Routing;
 using SmartBreadcrumbs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Documentor.TagHelpers
 {
@@ -19,21 +12,18 @@ namespace Documentor.TagHelpers
 
         [ViewContext]
         [HtmlAttributeNotBound]
-        public ViewContext ViewContext { get; set; }
+        public ViewContext ViewContext { get; set; } = default!;
 
         private readonly BreadcrumbsManager _breadcrumbsManager;
-        private readonly UrlHelper _urlHelper;
+        private readonly IUrlHelper _urlHelper;
 
-        public BreadcrumbsTagHelper(BreadcrumbsManager breadcrumbsManager,
-            IActionContextAccessor actionContextAccessor)
+        public BreadcrumbsTagHelper(BreadcrumbsManager breadcrumbsManager, IUrlHelper urlHelper)
         {
-            if (breadcrumbsManager == null)
-                throw new ArgumentNullException(nameof(breadcrumbsManager));
-            if (actionContextAccessor == null)
-                throw new ArgumentNullException(nameof(actionContextAccessor));
+            Ensure.NotNull(breadcrumbsManager, nameof(breadcrumbsManager));
+            Ensure.NotNull(urlHelper, nameof(urlHelper));
 
             _breadcrumbsManager = breadcrumbsManager;
-            _urlHelper = new UrlHelper(actionContextAccessor.ActionContext);
+            _urlHelper = urlHelper;
         }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -44,8 +34,8 @@ namespace Documentor.TagHelpers
                 return;
             }
 
-            string action = ViewContext.ActionDescriptor.RouteValues["action"];
-            string controller = ViewContext.ActionDescriptor.RouteValues["controller"];
+            string action = ViewContext.ActionDescriptor.RouteValues["action"]!;
+            string controller = ViewContext.ActionDescriptor.RouteValues["controller"]!;
 
             var nodeKey = $"{controller}.{action}";
             var node = ViewContext.ViewData["BreadcrumbNode"] as BreadcrumbNode ?? _breadcrumbsManager.GetNode(nodeKey);
@@ -92,9 +82,9 @@ namespace Documentor.TagHelpers
 
                 RouteValueDictionary routes = new RouteValueDictionary(node.RouteValues);
                 if (routes.ContainsKey("virtualPath"))
-                    breadcrumbLink.Attributes.Add("href", "/" + routes["virtualPath"]); // Tip: Otherwise '/' escaped
+                    breadcrumbLink.Attributes.Add("href", "/" + routes["virtualPath"]!.ToString()!.ToLower()); // Tip: Otherwise '/' escaped
                 else
-                    breadcrumbLink.Attributes.Add("href", node.GetUrl(_urlHelper));
+                    breadcrumbLink.Attributes.Add("href", _urlHelper.Action(node.Action, node.Controller, node.RouteValues));
                 breadcrumbLink.InnerHtml.Append(node.Title);
                 breadcrumbItem.InnerHtml.AppendHtml(breadcrumbLink);
                 items.Add(breadcrumbItem);
@@ -117,7 +107,7 @@ namespace Documentor.TagHelpers
                 return title;
 
             string key = title.Substring(9);
-            return ViewContext.ViewData.ContainsKey(key) ? ViewContext.ViewData[key].ToString() : key;
+            return ViewContext.ViewData.ContainsKey(key) ? ViewContext.ViewData[key]!.ToString()! : key;
         }
     }
 }

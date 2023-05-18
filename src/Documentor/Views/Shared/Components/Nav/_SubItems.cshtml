@@ -1,4 +1,5 @@
-﻿@model IEnumerable<NavItem>
+﻿@using Documentor.Framework.Navigation;
+@model IEnumerable<NavItem>
 
 @if (Model.Count() > 0)
 {
@@ -6,7 +7,7 @@
         @foreach (NavItem navItem in Model)
         {
             <li nav-item="navItem" is-first="false" is-sub-item="true">
-                <a href="/@navItem.VirtualPath" class="sidebar-nav__link">
+                <a href="/@navItem.VirtualPath.ToLower()" class="sidebar-nav__link">
                     <span class="sidebar-nav__text">@navItem.DisplayName</span>
                 </a>
                 @await Html.PartialAsync("~/Views/Shared/Components/Nav/_SubItems.cshtml", navItem.Children)

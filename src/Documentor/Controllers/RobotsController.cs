@@ -1,34 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Documentor.Extensions;
-using Documentor.Models;
+using Documentor.Framework.Notifications;
+using Documentor.Models.Robots;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using SmartBreadcrumbs;
+using System.Text;
 
 namespace Documentor.Controllers
 {
     [Authorize]
-    public class RobotsController : BaseController
+    public class RobotsController : AppController
     {
         private const string _robotsTxtFilename = "robots.txt";
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public RobotsController(IHostingEnvironment hostingEnvironment)
+        public RobotsController(IWebHostEnvironment hostEnvironment)
         {
-            if (hostingEnvironment == null)
-                throw new ArgumentNullException(nameof(hostingEnvironment));
+            if (hostEnvironment == null)
+                throw new ArgumentNullException(nameof(hostEnvironment));
 
-            _hostingEnvironment = hostingEnvironment;
+            _hostEnvironment = hostEnvironment;
         }
 
         [HttpGet]
-        [Breadcrumb("Robots")]        
+        [Breadcrumb("Robots")]
         public async Task<IActionResult> Index()
         {
             RobotsEditCommand robotsEditCommand = new RobotsEditCommand();
@@ -53,7 +46,7 @@ namespace Documentor.Controllers
 
         private FileInfo GetRobotsTxtFile()
         {
-            return new FileInfo(Path.Combine(_hostingEnvironment.WebRootPath, _robotsTxtFilename));
+            return new FileInfo(Path.Combine(_hostEnvironment.WebRootPath, _robotsTxtFilename));
         }
     }
 }

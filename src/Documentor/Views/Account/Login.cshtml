@@ -1,13 +1,12 @@
-﻿@using Documentor.Services
-@using Documentor.Config
-
+﻿@using Documentor.Services.Authentication;
+@using Documentor.Services.Navigation;
+@using Documentor.Settings;
 @inject ISignInManager SignInManager
-@inject Microsoft.Extensions.Options.IOptionsSnapshot<AuthorizationConfig> AuthConfigOptions
+@inject Microsoft.Extensions.Options.IOptionsSnapshot<AuthorizationSettings> AuthSettingsOptions
 @inject INavigator navigator
-
 @{
     Title = "Sign in";
-    Fullwidth = true;
+    FullWidth = true;
     Breadcrumbs = false;
 }
 
@@ -30,7 +29,7 @@
             }
             else
             {
-                @if (AuthConfigOptions.Value.Emails.Length > 0)
+                @if (AuthSettingsOptions.Value.Emails.Count > 0)
                 {
                     using (Html.BeginForm("ExternalLogin", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
                     {
