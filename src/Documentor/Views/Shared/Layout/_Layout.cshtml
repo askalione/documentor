@@ -1,0 +1,107 @@
+﻿@inject IOptionsSnapshot<AppSettings> AppSettingsOptions
+@inject IAppVersionProvider AppVersionProvider
+@using System.Reflection
+@using Documentor.Framework.Versioning;
+@using Documentor.Settings;
+@using Microsoft.Extensions.Options;
+
+@{
+    AppSettings appSettings = AppSettingsOptions.Value;
+    string appVersion = AppVersionProvider.GetVersion();
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    @if (string.IsNullOrEmpty(Description) == false)
+    {
+        <meta name="description" content="@Description">
+    }
+    <meta name="generator" content="Documentor @appVersion">
+    <title>@Title</title>
+    <link rel="shortcut icon" asp-href-include="~/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" asp-href-include="~/assets/images/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+    <link asp-href-include="~/assets/css/fonts/fonts.min.css" rel="stylesheet">
+    <link asp-href-include="~/assets/css/vendors/vendors.min.css" rel="stylesheet">
+    <link asp-href-include="~/assets/css/app/app.min.css" rel="stylesheet">
+    @await RenderSectionAsync("Styles", false)
+</head>
+<body class="@(FullWidth ? "FullWidth": "")">
+    <div class="body-overlay"></div>
+    @if (FullWidth == false)
+    {
+        <aside class="sidebar @(User.Identity!.IsAuthenticated ? "sidebar--logged-in" : "")">
+            <header class="header">
+                <div class="header__inner">
+                    <div class="logo">
+                        @{
+                            string brand = string.IsNullOrWhiteSpace(appSettings.DisplayName) == false ? appSettings.DisplayName : "Documentor";
+                        }
+                        <a href="/" class="logo__link" title="@brand">
+                            <span class="logo__text">
+                                @brand
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+            @if (User.Identity.IsAuthenticated)
+            {
+                @await Html.PartialAsync("Layout/_Login")
+            }
+            <div class="scroller scrollbar-inner">
+                @await Component.InvokeAsync("Nav")
+                @if (string.IsNullOrWhiteSpace(appSettings.Download.Url) == false)
+                {
+                    <div class="share scroller__section">
+                        <div class="share__inner">
+                            <a href="@appSettings.Download.Url" class="btn btn-primary btn-block download__button">
+                                <span class="download__button-icon"><i class="la la-download"></i></span>
+                                <span class="download__button-text">Download@(string.IsNullOrWhiteSpace(appSettings.Download.Version) == false ? " v" + appSettings.Download.Version : "")</span>
+                            </a>
+                        </div>
+                    </div>
+                }
+                <external-links></external-links>
+            </div>
+        </aside>
+    }
+    <div class="content">
+
+        @if (FullWidth == false)
+        {
+            <div class="content-overlay"></div>
+
+            <button class="btn btn-primary sidebar-toggle">
+                <i class="la la-navicon"></i>
+            </button>
+        }
+
+        <main class="main">
+            <div class="page__header">
+                <div class="page__actions">
+                    @if (IsSectionDefined("PageActions"))
+                    {
+                        @RenderSection("PageActions", false)
+                    }
+                </div>
+                <breadcrumbs show="Breadcrumbs"></breadcrumbs>
+            </div>
+            @RenderBody()
+        </main>
+
+        <footer class="footer">
+            Powered by <a href="https://github.com/askalione/documentor">Documentor</a>
+        </footer>
+
+    </div>
+    <script asp-src-include="~/assets/js/vendors/vendors.min.js"></script>
+    <script asp-src-include="~/assets/js/app/app.min.js"></script>
+    <notifications></notifications>
+    @await RenderSectionAsync("Scripts", false)
+</body>
+</html>

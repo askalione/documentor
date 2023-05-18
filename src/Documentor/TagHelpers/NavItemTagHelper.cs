@@ -1,25 +1,21 @@
-﻿using Documentor.Constants;
-using Documentor.Models;
+using Documentor.Framework.Constants;
+using Documentor.Framework.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Documentor.TagHelpers
 {
     [HtmlTargetElement(Attributes = "nav-item")]
     public class NavItemTagHelper : TagHelper
     {
-        public NavItem NavItem { get; set; }
+        public NavItem NavItem { get; set; } = default!;
         public bool IsFirst { get; set; }
         public bool IsSubItem { get; set; }
 
         [ViewContext]
         [HtmlAttributeNotBound]
-        public ViewContext ViewContext { get; set; }
+        public ViewContext ViewContext { get; set; } = default!;
 
         private const string _expandedItem = "sidebar-nav__item--expanded";
         private const string _activeItem = "sidebar-nav__item--active";

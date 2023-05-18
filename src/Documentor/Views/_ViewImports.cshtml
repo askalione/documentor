@@ -1,8 +1,7 @@
-﻿@inherits BasePage<TModel>
-@using Documentor.Models
-@using Documentor.TagHelpers
-@using Documentor.Infrastructure
-@using System.Security.Claims
-
+﻿@using Structr.AspNetCore.TagHelpers
+@using Structr.Abstractions.Extensions
+@using Documentor.Framework.Razor
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Structr.AspNetCore
 @addTagHelper *, Documentor
+@inherits AppRazorPage<TModel>

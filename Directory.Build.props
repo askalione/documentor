@@ -1,0 +1,10 @@
+<Project>
+    <PropertyGroup>
+        <Version>2.0.0</Version>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <LangVersion>latest</LangVersion>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+</Project>

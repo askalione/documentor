@@ -1,12 +1,8 @@
-﻿using Documentor.Extensions;
-using Documentor.Models;
+using Documentor.Framework.Notifications;
+using Documentor.Framework.TempData;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Documentor.TagHelpers
 {
@@ -15,7 +11,7 @@ namespace Documentor.TagHelpers
     {
         [ViewContext]
         [HtmlAttributeNotBound]
-        public ViewContext ViewContext { get; set; }
+        public ViewContext ViewContext { get; set; } = default!;
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {

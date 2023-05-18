@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Documentor.Services;
-using Microsoft.AspNetCore.Mvc;
+using Documentor.Services.Dumps;
 
 namespace Documentor.Controllers
 {
-    public class DumpController : BaseController
+    public class DumpController : AppController
     {
         private readonly IDumpProcessor _dumper;
 

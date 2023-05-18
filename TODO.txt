@@ -1,5 +1,0 @@
-# Real world example for demo page
-
-# Multilanguage
-
-# Search (Extensibility)

@@ -1,9 +1,9 @@
-﻿@inject Microsoft.Extensions.Options.IOptionsSnapshot<AppConfig> AppConfigOptions
-@using Documentor.Config
+﻿@inject Microsoft.Extensions.Options.IOptionsSnapshot<AppSettings> AppSettingsOptions
+@using Documentor.Framework.Navigation;
+@using Documentor.Settings;
 @model Nav
-
 @{
-    AppConfig appConfig = AppConfigOptions.Value;
+    AppSettings appSettings = AppSettingsOptions.Value;
 }
 
 @if (Model.Items.Count() > 0)
@@ -13,9 +13,9 @@
             @foreach (NavItem navItem in Model.Items)
             {
                 <li nav-item="navItem" is-first="navItem == Model.Items.First()" is-sub-item="false">
-                    <a href="/@navItem.VirtualPath" class="sidebar-nav__link">
+                    <a href="/@navItem.VirtualPath.ToLower()" class="sidebar-nav__link">
                         <span class="sidebar-nav__icon"></span>
-                        @if (appConfig.ShowSequenceNumbers)
+                        @if (appSettings.ShowSequenceNumbers)
                         {
                             <span class="sidebar-nav__sequence-number">@navItem.SequenceNumber.</span>
                         }

@@ -1,14 +1,9 @@
-﻿using Documentor.Config;
-using Microsoft.AspNetCore.Mvc;
+using Documentor.Settings;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Documentor.TagHelpers
 {
@@ -18,29 +13,43 @@ namespace Documentor.TagHelpers
         private readonly ExternalLinksSettings _settings;
         private readonly UrlHelper _urlHelper;
 
-        public ExternalLinksTagHelper(IOptionsSnapshot<AppConfig> configOptions,
+        public ExternalLinksTagHelper(IOptionsSnapshot<AppSettings> settingsOptions,
             IActionContextAccessor actionContextAccessor)
         {
-            if (configOptions == null)
-                throw new ArgumentNullException(nameof(configOptions));
-            if (actionContextAccessor == null)
-                throw new ArgumentNullException(nameof(actionContextAccessor));
+            Ensure.NotNull(settingsOptions, nameof(settingsOptions));
+            Ensure.NotNull(actionContextAccessor, nameof(actionContextAccessor));
 
-            _settings = configOptions.Value.ExternalLinks;
-            _urlHelper = new UrlHelper(actionContextAccessor.ActionContext);
+            _settings = settingsOptions.Value.ExternalLinks;
+            _urlHelper = new UrlHelper(actionContextAccessor.ActionContext!);
         }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            List<ExternalLink> links = new List<ExternalLink>()
+            List<ExternalLink> links = new List<ExternalLink>();
+            if (string.IsNullOrWhiteSpace(_settings.Github) == false)
             {
-                new ExternalLink { Url = _settings.Github, Name = nameof(_settings.Github), UseImage = false },
-                new ExternalLink { Url = _settings.Bitbucket, Name = nameof(_settings.Bitbucket), UseImage = false },
-                new ExternalLink { Url = _settings.Nuget, Name = nameof(_settings.Nuget), UseImage = true },
-                new ExternalLink { Url = _settings.Bower, Name = nameof(_settings.Bower), UseImage = true },
-                new ExternalLink { Url = _settings.Npm, Name = nameof(_settings.Npm), UseImage = true },
-                new ExternalLink { Url = _settings.Pypi, Name = nameof(_settings.Pypi), UseImage = true }
-            };
+                links.Add(new ExternalLink { Url = _settings.Github, Name = nameof(_settings.Github), UseImage = false });
+            }
+            if (string.IsNullOrWhiteSpace(_settings.Bitbucket) == false)
+            {
+                links.Add(new ExternalLink { Url = _settings.Bitbucket, Name = nameof(_settings.Bitbucket), UseImage = false });
+            }
+            if (string.IsNullOrWhiteSpace(_settings.Nuget) == false)
+            {
+                links.Add(new ExternalLink { Url = _settings.Nuget, Name = nameof(_settings.Nuget), UseImage = true });
+            }
+            if (string.IsNullOrWhiteSpace(_settings.Bower) == false)
+            {
+                links.Add(new ExternalLink { Url = _settings.Bower, Name = nameof(_settings.Bower), UseImage = true });
+            }
+            if (string.IsNullOrWhiteSpace(_settings.Npm) == false)
+            {
+                links.Add(new ExternalLink { Url = _settings.Npm, Name = nameof(_settings.Npm), UseImage = true });
+            }
+            if (string.IsNullOrWhiteSpace(_settings.Pypi) == false)
+            {
+                links.Add(new ExternalLink { Url = _settings.Pypi, Name = nameof(_settings.Pypi), UseImage = true });
+            }
 
             links = links
                 .Where(x => !string.IsNullOrWhiteSpace(x.Url))
@@ -75,9 +84,9 @@ namespace Documentor.TagHelpers
                 TagBuilder itemIcon = new TagBuilder(link.UseImage ? "img" : "i");
                 itemIcon.AddCssClass("share__icon share__icon--" + (link.UseImage ? "image" : "font"));
                 if (link.UseImage)
-                    itemIcon.Attributes.Add("src", _urlHelper.Content("~/images/icon-" + link.Name.ToLower() + ".svg"));
+                    itemIcon.Attributes.Add("src", _urlHelper.Content("~/assets/images/icon-" + link.Name!.ToLower() + ".svg"));
                 else
-                    itemIcon.AddCssClass("la la-" + link.Name.ToLower());
+                    itemIcon.AddCssClass("la la-" + link.Name!.ToLower());
 
                 itemLink.InnerHtml.AppendHtml(itemIcon);
                 item.InnerHtml.AppendHtml(itemLink);
@@ -90,8 +99,8 @@ namespace Documentor.TagHelpers
 
         class ExternalLink
         {
-            public string Url { get; set; }
-            public string Name { get; set; }
+            public string Url { get; set; } = default!;
+            public string Name { get; set; } = default!;
             public bool UseImage { get; set; }
         }
     }

@@ -1,11 +1,12 @@
-﻿@model Nav
-
+﻿@using Documentor.Framework.Navigation;
+@model Nav
 @{
     Title = "Pages";
 }
 
 @section Styles {
-    <bundle name="~/css/tree.min.css"></bundle>
+    <link asp-href-include="~/assets/css/vendors/jstree.min.css" rel="stylesheet">
+    <link asp-href-include="~/assets/css/app/app-jstree.min.css" rel="stylesheet">
 }
 <h1 class="page__title">@Title</h1>
 
@@ -26,5 +27,6 @@
 
 
 @section Scripts {
-    <bundle name="~/js/pages.min.js"></bundle>
+    <script asp-src-include="~/assets/js/vendors/jstree.min.js"></script>
+    <script asp-src-include="~/assets/js/app/app-pages.min.js"></script>
 }

@@ -1,30 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Documentor.Config;
-using Documentor.Extensions;
-using Documentor.Infrastructure;
-using Documentor.Models;
+using Documentor.Framework.Notifications;
+using Documentor.Framework.Options;
+using Documentor.Models.Users;
+using Documentor.Settings;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using SmartBreadcrumbs;
 
 namespace Documentor.Controllers
 {
     [Authorize]
-    public class UsersController : BaseController
+    public class UsersController : AppController
     {
-        private readonly IOptionsModifier<AuthorizationConfig> _authorizationConfigModifier;
-        private AuthorizationConfig _authorizationConfig => _authorizationConfigModifier.Value;
+        private readonly IOptionsModifier<AuthorizationSettings> _authorizationSettingsModifier;
+        private AuthorizationSettings _authorizationSettings => _authorizationSettingsModifier.Value;
 
-        public UsersController(IOptionsModifier<AuthorizationConfig> configModifier)
+        public UsersController(IOptionsModifier<AuthorizationSettings> settingsModifier)
         {
-            if (configModifier == null)
-                throw new ArgumentNullException(nameof(configModifier));
+            if (settingsModifier == null)
+                throw new ArgumentNullException(nameof(settingsModifier));
 
-            _authorizationConfigModifier = configModifier;
+            _authorizationSettingsModifier = settingsModifier;
         }
 
         [HttpGet]
@@ -33,7 +27,7 @@ namespace Documentor.Controllers
         {
             UsersEditCommand usersEditCommand = new UsersEditCommand
             {
-                Emails = _authorizationConfig.Emails
+                Emails = _authorizationSettings.Emails
             };
             return View(usersEditCommand);
         }
@@ -48,11 +42,11 @@ namespace Documentor.Controllers
 
             email = email.Trim();
 
-            if (!_authorizationConfig.Emails.Any(x => x.Equals(email, StringComparison.OrdinalIgnoreCase)))
+            if (!_authorizationSettings.Emails.Any(x => x.Equals(email, StringComparison.OrdinalIgnoreCase)))
             {
-                List<string> emails = _authorizationConfig.Emails.ToList();
+                List<string> emails = _authorizationSettings.Emails.ToList();
                 emails.Add(email);
-                _authorizationConfigModifier.Update(x => x.Emails = emails.ToArray());
+                _authorizationSettingsModifier.Update(x => x.Emails = emails);
             }
 
             return Json(new JsonResponse(true))
@@ -62,10 +56,10 @@ namespace Documentor.Controllers
         [HttpPost]
         public IActionResult Remove(string email)
         {
-            List<string> emails = _authorizationConfig.Emails.ToList();
+            List<string> emails = _authorizationSettings.Emails.ToList();
             if (emails.Remove(email))
             {
-                _authorizationConfigModifier.Update(x => x.Emails = emails.ToArray());
+                _authorizationSettingsModifier.Update(x => x.Emails = emails);
                 return Json(new JsonResponse(true))
                     .Notify(NotificationType.Success, $"{email} removed");
             }

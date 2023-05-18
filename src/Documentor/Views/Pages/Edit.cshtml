@@ -1,12 +1,13 @@
-﻿@model Page
-
+﻿@using Documentor.Models.Pages;
+@model Page
 @{
     Title = Model.Context.Metadata.Title;
     Description = Model.Context.Metadata.Description;
 }
 
 @section Styles {
-    <bundle name="~/css/editor.min.css"></bundle>
+    <link asp-href-include="~/assets/css/vendors/simplemde.min.css" rel="stylesheet">
+    <link asp-href-include="~/assets/css/app/app-editor.min.css" rel="stylesheet">
 }
 
 @section PageActions {
@@ -24,5 +25,6 @@
 </div>
 
 @section Scripts {
-    <bundle name="~/js/editor.min.js"></bundle>
+    <script asp-src-include="~/assets/js/vendors/simplemde.min.js"></script>
+    <script asp-src-include="~/assets/js/app/app-editor.min.js"></script>
 }
