@@ -21,6 +21,7 @@ namespace Documentor
         {
             services.Configure<AppSettings>(configuration.GetSection("App"));
             services.Configure<IOSettings>(configuration.GetSection("IO"));
+            services.Configure<BasicAuthenticationSettings>(configuration.GetSection("BasicAuthentication"));
             services.ConfigureModifier<AuthorizationSettings>(configuration.GetSection("Authorization"), environment.IsDevelopment() ? $"appsettings.{environment.EnvironmentName}.json" : "appsettings.json");
 
             services.AddBreadcrumbs();
@@ -31,6 +32,7 @@ namespace Documentor
 
             services.AddAspNetCore();
 
+            services.AddBasicAuthentication();
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;

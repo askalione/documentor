@@ -1,4 +1,5 @@
 using Documentor;
+using Documentor.Framework.Authentication;
 using Documentor.Framework.Routes;
 using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.AspNetCore.Rewrite;
@@ -70,6 +71,7 @@ try
     app.UseRouting();
     app.UseWebMarkupMin();
 
+    app.UseBasicAuthentication();
     app.UseAuthentication();
     app.UseAuthorization();
 
