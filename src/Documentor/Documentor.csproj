@@ -56,8 +56,8 @@
     </Target>
 
     <Target Name="CreateCacheFolder" AfterTargets="Publish">
-        <MakeDir Directories="$(PublishUrl)\Cache" Condition="!Exists('$(PublishUrl)\Cache')" />
-        <Exec Command="del /s /q &quot;$(PublishUrl)\Cache&quot;" />
+        <MakeDir Directories="$(PublishUrl)\App_Data\Cache" Condition="!Exists('$(PublishUrl)\App_Data\Cache')" />
+        <Exec Command="del /s /q &quot;$(PublishUrl)\App_Data\Cache&quot;" />
     </Target>
 
     <Target Name="BuildAssets" AfterTargets="PreBuildEvent">
