@@ -21,6 +21,9 @@ try
     var environment = builder.Environment;
     var services = builder.Services;
 
+    builder.Logging.ClearProviders();
+    builder.Host.UseNLog();
+
     services.AddApp(configuration, environment);
 
     var app = builder.Build();

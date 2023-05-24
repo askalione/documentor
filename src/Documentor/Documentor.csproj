@@ -44,6 +44,13 @@
         <PackageReference Include="WebMarkupMin.AspNetCore7" Version="2.13.9" />
     </ItemGroup>
 
+    <Target Name="CopyPages" AfterTargets="AfterPublish">
+        <ItemGroup>
+            <PageFiles Include="App_Data\**\*.md" />
+        </ItemGroup>
+        <Copy SourceFiles="@(PageFiles)" DestinationFolder="$(PublishUrl)App_Data\%(RecursiveDir)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" ContinueOnError="false" />
+    </Target>
+
     <ItemGroup>
         <Content Update="ClientApp\**" CopyToPublishDirectory="Never" CopyToOutputDirectory="Never" />
         <Content Update="appsettings.*.json" CopyToPublishDirectory="Never" CopyToOutputDirectory="Never" />       
